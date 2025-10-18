@@ -1,0 +1,31 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+  public function up(): void
+{
+    Schema::create('plan_estudios', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('carrera_id')->constrained()->onDelete('cascade');
+        $table->string('semestre'); // Ej: "1er Semestre", "2do Semestre"
+        $table->string('materia');
+        $table->integer('horas_semanales')->nullable();
+        $table->timestamps();
+    });
+}
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('plan_estudios');
+    }
+};
