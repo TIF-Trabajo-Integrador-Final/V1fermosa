@@ -71,15 +71,7 @@
                 <!-- ===== TARJETA 1: SEDES ===== -->
                 <div class="flip-card">
                     <div class="flip-card-inner">
-                        <!-- Cara Frontal -->
-                        <div class="flip-card-front bg-gray-900 text-white">
-                            <!-- Icono de Sede (Heroicons) -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m4-8h1m-1 4h1m-1 4h1m-1 4h1m0-8h1m-1 4h1m0 4h1" />
-                            </svg>
-                            <h3 class="text-3xl font-bold">SEDES</h3>
-                            <p class="mt-2 text-blue-100">Gira para ver opciones</p>
-                        </div>
+                    
                         <!-- Cara Trasera -->
                         <div class="flip-card-back bg-grey-600 text-black">
                             <h4 class="text-2xl font-semibold mb-4">Gestionar Sedes</h4>
@@ -87,14 +79,13 @@
                             
                             <!-- Botón de Acción (Solo Index) -->
                             <div class="w-full max-w-xs">
-                                <a href="{{ route('admin.sedes.index') }}" class="w-full bg-blue-900 hover:bg-blue-600 text-blue font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:blue">
+                                <a href="{{ route('#') }}" class="w-full bg-blue-900 hover:bg-blue-600 text-blue font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:blue">
                                     Gestionar Sedes
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <!-- ===== TARJETA 2: CARRERAS ===== -->
                 <div class="flip-card">
                     <div class="flip-card-inner">

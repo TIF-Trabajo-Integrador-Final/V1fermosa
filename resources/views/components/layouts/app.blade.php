@@ -6,7 +6,6 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     
-    {{-- Estilo extra para los botones de Swiper --}}
     <style>
         .swiper-button-next::after,
         .swiper-button-prev::after {
@@ -67,73 +66,46 @@
 </head>
 <body class="font-sans antialiased bg-gray-100 min-h-screen flex flex-col">
     <!-- HEADER -->
-    <header class="bg-transparent-900 transition shadow-lg sticky top-0 z-10">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-            <!-- Logo/Nombre -->
-            <a href="{{ route('inicio') }}" class="flex items-center text-xl font-extrabold text-blue-700 hover:text-indigo-200 transition tracking-wider">
-                <img src="{{ asset('images/logo1.jpeg') }}" alt="Logo Instituto Superior Fermosa" class="h-8 mr-3"> 
-                Instituto Superior Fermosa
-            </a>
-            
-            <!-- Enlaces de Navegación -->
-            <div class="flex space-x-6">
-                {{-- ENLACE DE INICIO --}}
-                <a href="{{ route('inicio') }}" class="text-blue-700 hover:text-indigo-200 transition font-medium flex items-center">
-                    <i class="fas fa-home mr-1"></i> Inicio
-                </a>
-                
-                <a href="{{ route('carreras') }}" class="text-blue-700 hover:text-indigo-200 transition font-medium flex items-center">
-                    <i class="fas fa-graduation-cap mr-1"></i> Carreras
-                </a>
-                <a href="{{ route('requisitos') }}" class="text-blue-700 hover:text-indigo-200 transition font-medium flex items-center">
-                    <i class="fas fa-file-alt mr-1"></i> Requisitos Inscripción
-                </a>
-                <a href="{{ route('sedes') }}" class="text-blue-700 hover:text-indigo-200 transition font-medium flex items-center">
-                    <i class="fas fa-map-marker-alt mr-1"></i> Sedes
-                </a>
-                
-              <a href="{{ route('login') }}" class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-3 py-1 rounded-md transition duration-200 shadow flex items-center">
-                <i class="fas fa-user-circle mr-2"></i>
-                Panel Admin
-            </a>
-          </div>
-        </nav>
-    </header>
+    <header 
+        id="main-header" 
+        class="bg-gray-700 transition transition-transform duration-300 ease-in-out {{-- <-- CLASE CORREGIDA --}}
+            shadow-lg sticky top-0 z-10"
+            >
+    
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+    <a href="{{ route('inicio') }}" class="flex items-center text-xl font-extrabold text-white hover:text-indigo-200 transition tracking-wider">
+        <img src="{{ asset('images/logo1.jpeg') }}" alt="Logo Instituto Superior Fermosa" class="h-8 mr-3"> 
+        Instituto Superior Fermosa
+    </a>
+    
+    <div class="flex space-x-6">
+        {{-- 2. Enlaces con iconos actualizados a celeste --}}
+        <a href="{{ route('inicio') }}" class="text-white hover:text-indigo-200 transition font-medium flex items-center">
+            <i class="fas fa-home mr-1 text-blue-400"></i> 
+            Inicio
+        </a>
+        
+        <a href="{{ route('carreras') }}" class="text-white hover:text-indigo-200 transition font-medium flex items-center">
+            {{-- Añadimos 'text-blue-400' al icono --}}
+            <i class="fas fa-graduation-cap mr-1 text-blue-400"></i> 
+            Carreras
+        </a>
+        <a href="{{ route('requisitos') }}" class="text-white hover:text-indigo-200 transition font-medium flex items-center">
+            <i class="fas fa-file-alt mr-1 text-blue-400"></i> 
+            Requisitos Inscripción
+        </a>
+        <a href="{{ route('login') }}" class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-3 py-1 rounded-md transition duration-200 shadow flex items-center">
+            <i class="fas fa-user-circle mr-2"></i>
+            Panel Admin
+        </a>
+    </div>
+</nav>
+</header>
     
     <!-- MAIN CONTENT -->
     <main class="flex-grow py-12">
         {{ $slot }}
     </main>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
-
-    <script>
-        // Inicializa las animaciones AOS
-        AOS.init({
-            duration: 800,
-            once: true // La animación ocurre solo una vez
-        });
-
-        // Inicializa el carrusel Swiper
-        var swiper = new Swiper(".mySwiper", {
-            loop: true, // Para que sea infinito
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-            autoplay: {
-                delay: 5000, // Cambia de foto cada 5 segundos
-                disableOnInteraction: false,
-            },
-        });
-    </script>
 <footer 
     x-data="{ isVisible: false }"
     x-init="
@@ -164,12 +136,12 @@
 
             <div class="flex space-x-3 mt-5">
                 {{-- ÍCONO DE FACEBOOK --}}
-                <a href="https://www.facebook.com/fermosainstituto" target="_blank" title="Facebook"
+                <a href="https://www.facebook.com/ISFermosa/?locale=es_LA" target="_blank" title="Facebook"
                    class="w-9 h-9 flex items-center justify-center rounded-full border border-gray-500 hover:border-indigo-500 hover:text-indigo-400 transition">
                     <i class="fab fa-facebook-f"></i>
                 </a>
                 {{-- ÍCONO DE INSTAGRAM --}}
-                <a href="https://www.instagram.com/fermosainstituto" target="_blank" title="Instagram"
+                <a href="https://www.instagram.com/institutosuperiorfermosa?igsh=NTc4MTIwNjQ2YQ==" target="_blank" title="Instagram"
                    class="w-9 h-9 flex items-center justify-center rounded-full border border-gray-500 hover:border-indigo-500 hover:text-indigo-400 transition">
                     <i class="fab fa-instagram"></i>
                 </a>
@@ -186,8 +158,8 @@
             <h3 class="text-white text-xl font-semibold mb-3">Contacto</h3>
             <ul class="text-sm space-y-2">
                 <li><i class="fas fa-map-marker-alt text-indigo-400 mr-2"></i> Maipú 850, P3600 Formosa</li>
-                <li><i class="fas fa-phone-alt text-indigo-400 mr-2"></i> (370) 442-XXXX</li>
-                <li><i class="fas fa-envelope text-indigo-400 mr-2"></i> contacto@instituto.com</li>
+                <li><i class="fas fa-phone-alt text-indigo-400 mr-2"></i> 3704 69-9344 </li>
+                <li><i class="fas fa-envelope text-indigo-400 mr-2"></i> secretarios.fermosa.2022@gmail.com</li>
             </ul>
         </div>
 
@@ -210,7 +182,7 @@
     </div>
 </footer>
     {{-- Botón WhatsApp flotante --}}
-    <a href="https://wa.me/5493704616323?text=Hola,%20quisiera%20recibir%20informaci%C3%B3n"
+    <a href="https://wa.me/549370699344 ?text=Hola,%20quisiera%20recibir%20informaci%C3%B3n"
     class="whatsapp-float"
     target="_blank"
     aria-label="Chat por WhatsApp">
@@ -219,5 +191,61 @@
 
     @livewireScripts
     @stack('scripts')
+
+    <script>
+        // Seleccionamos el header que acabamos de identificar
+        const header = document.querySelector('#main-header');
+        
+        // Guardamos la última posición de scroll para comparar
+        let lastScrollY = window.scrollY;
+
+        // Escuchamos el evento 'scroll' de la ventana
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+
+            // Si el scroll actual es MAYOR al anterior Y estamos a más de 100px del topo
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                // --- SCROLL HACIA ABAJO ---
+                header.classList.add('-translate-y-full');
+            } else {
+                // --- SCROLL HACIA ARRIBA ---
+                header.classList.remove('-translate-y-full');
+            }
+
+            // Actualizamos la última posición del scroll
+            lastScrollY = currentScrollY;
+        });
+    </script>
+
+      <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+
+    <script>
+        // Inicializa las animaciones AOS
+        AOS.init({
+            duration: 800,
+            once: true // La animación ocurre solo una vez
+        });
+
+        // Inicializa el carrusel Swiper
+        var swiper = new Swiper(".mySwiper", {
+            loop: true, // Para que sea infinito
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            autoplay: {
+                delay: 5000, // Cambia de foto cada 5 segundos
+                disableOnInteraction: false,
+            },
+        });
+    </script>
+    
 </body>
 </html>

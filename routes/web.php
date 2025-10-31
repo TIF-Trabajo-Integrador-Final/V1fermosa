@@ -7,13 +7,11 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Inicio;
 use App\Livewire\Carreras;
 use App\Livewire\Requisitos;
-use App\Livewire\Sedes;
+
 
 // Importar todos los componentes Livewire del Admin
 use App\Livewire\Admin\CarrerasIndex;
-use App\Livewire\Admin\SedesIndex;
 use App\Livewire\Admin\RequisitosIndex;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +22,10 @@ use App\Livewire\Admin\RequisitosIndex;
 Route::get('/', Inicio::class)->name('inicio'); 
 Route::get('/carreras', Carreras::class)->name('carreras');
 Route::get('/requisitos-inscripcion', Requisitos::class)->name('requisitos');
-Route::get('/sedes', Sedes::class)->name('sedes');
+
+
+// ...
+
 
 
 /*
@@ -39,7 +40,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Rutas de Gestión del Instituto
     Route::get('admin/carreras', CarrerasIndex::class)->name('admin.carreras.index');
-    Route::get('admin/sedes', SedesIndex::class)->name('admin.sedes.index');
     Route::get('admin/requisitos', RequisitosIndex::class)->name('admin.requisitos.index');
 
     // Rutas de Perfil (Generadas por Breeze)
