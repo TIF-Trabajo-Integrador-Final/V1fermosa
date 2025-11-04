@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Inicio;
 use App\Livewire\Carreras;
 use App\Livewire\Requisitos;
+use App\Livewire\ShowConvenios; 
+
 
 
 // Importar todos los componentes Livewire del Admin
@@ -22,7 +24,7 @@ use App\Livewire\Admin\RequisitosIndex;
 Route::get('/', Inicio::class)->name('inicio'); 
 Route::get('/carreras', Carreras::class)->name('carreras');
 Route::get('/requisitos-inscripcion', Requisitos::class)->name('requisitos');
-
+Route::get('/convenios', ShowConvenios::class)->name('convenios');
 
 // ...
 

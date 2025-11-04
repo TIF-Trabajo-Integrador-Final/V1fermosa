@@ -1,7 +1,31 @@
 import './bootstrap';
+import AOS from 'aos';
+import 'aos/dist/aos.css'; 
 
-import Alpine from 'alpinejs';
+// Importa los estilos principales de Swiper
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
-window.Alpine = Alpine;
+// Importa el Core de Swiper y los módulos
+import Swiper from 'swiper';
+import { Autoplay, EffectCoverflow, Navigation, Pagination } from 'swiper/modules';
 
-Alpine.start();
+// Exponer módulos Swiper globalmente
+window.Swiper = Swiper;
+window.SwiperModules = {
+  Autoplay,
+  EffectCoverflow,
+  Navigation,
+  Pagination
+};
+
+// Inicializar AOS al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    AOS.init({
+        duration: 800,
+        once: false, 
+        offset: 100,
+    });
+});
