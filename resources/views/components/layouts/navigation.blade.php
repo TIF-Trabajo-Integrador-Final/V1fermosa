@@ -1,123 +1,63 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
+<nav class="bg-gradient-to-r from-[#0b1b3f] to-[#1c3faa] text-white shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <!-- CAMBIO: El logo ahora apunta a 'admin.dashboard' -->
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
-                </div>
+        <div class="flex justify-between h-16 items-center">
 
-                <!-- Navigation Links (Desktop) -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <!-- CAMBIO: El enlace 'Inicio' ahora apunta a 'admin.dashboard' -->
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Inicio Panel del Administrador') }}
-                    </x-nav-link>
-
-                    <!-- Estos ya estaban bien -->
-                    <x-nav-link :href="route('admin.carreras.index')" :active="request()->routeIs('admin.carreras.index')">
-                        {{ __('Gestión de Carreras') }}
-                    </x-nav-link>
-
-                    <x-nav-link :href="route('admin.sedes.index')" :active="request()->routeIs('admin.sedes.index')">
-                        {{ __('Gestión de Sedes') }}
-                    </x-nav-link>
-
-                    <x-nav-link :href="route('admin.requisitos.index')" :active="request()->routeIs('admin.requisitos.index')">
-                        {{ __('Gestión de Requisitos') }}
-                    </x-nav-link>
-                </div>
+            {{-- LOGO --}}
+            <div class="flex items-center space-x-2">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8 w-8 rounded">
+                <span class="font-semibold text-lg">Instituto Superior Fermosa</span>
             </div>
 
-            <!-- Settings Dropdown (Menú de Usuario) -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
+            {{-- LINKS DE NAVEGACIÓN --}}
+            <div class="hidden md:flex items-center space-x-6">
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                {{-- Inicio --}}
+                <a href="{{ route('inicio') }}"
+                    class="flex items-center space-x-1 hover:text-gray-200 transition">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
 
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
+                {{-- Carreras (con dropdown si lo deseas más adelante) --}}
+                <a href="{{ route('carreras.index') }}"
+                    class="flex items-center space-x-1 hover:text-gray-200 transition">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Carreras</span>
+                </a>
+
+                {{-- PANEL ADMIN  🚀 --}}
+                <a href="{{ route('admin.entry') }}"
+                    class="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded transition">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Panel Admin</span>
+                </a>
             </div>
 
-            <!-- Hamburger (Menú móvil) -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            {{-- MENÚ MÓVIL --}}
+            <div class="md:hidden flex items-center">
+                <button id="menu-toggle" class="focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu (Menú móvil desplegado) -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <!-- CAMBIO: El enlace 'Dashboard' ahora apunta a 'admin.dashboard' y tiene el texto correcto -->
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Inicio Panel del Administrador') }}
-            </x-responsive-nav-link>
-
-            <!-- Estos ya estaban bien -->
-            <x-responsive-nav-link :href="route('admin.carreras.index')" :active="request()->routeIs('admin.carreras.index')">
-                {{ __('Gestión de Carreras') }}
-            </x-responsive-nav-link>
-
-
-            <x-responsive-nav-link :href="route('admin.requisitos.index')" :active="request()->routeIs('admin.requisitos.index')">
-                {{ __('Gestión de Requisitos') }}
-            </x-responsive-nav-link>
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
+    {{-- MENÚ RESPONSIVE --}}
+    <div id="mobile-menu" class="hidden md:hidden bg-[#0b1b3f] border-t border-white/10">
+        <div class="px-4 py-3 space-y-2">
+            <a href="{{ route('inicio') }}" class="block hover:text-gray-300">Inicio</a>
+            <a href="{{ route('carreras.index') }}" class="block hover:text-gray-300">Carreras</a>
+            <a href="{{ route('admin.entry') }}" class="block hover:text-gray-300 font-semibold">Panel Admin</a>
         </div>
     </div>
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
 </nav>

@@ -8,16 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('requisitos', function (Blueprint $table) {
+        Schema::create('niveles', function (Blueprint $table) {
             $table->id();
-
-            $table->string('descripcion', 255);
+            $table->string('nombre')->unique();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('requisitos');
+        Schema::dropIfExists('niveles');
     }
 };

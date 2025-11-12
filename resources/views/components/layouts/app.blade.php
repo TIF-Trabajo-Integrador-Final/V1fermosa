@@ -1,188 +1,207 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {{-- AOS y Swiper --}}
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+    <title>{{ $title ?? 'Instituto Superior Fermosa' }}</title>
 
     {{-- Fuentes --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 
     {{-- Font Awesome --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 
- <style>
-    /* === BASE === */
-    body {
-        font-family: 'Poppins', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f3f4f6;
-    }
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
 
-    .font-serif {
-        font-family: 'Playfair Display', serif !important;
-    }
+        /* Header forzado a azul oscuro */
+        header#main-header {
+            background: linear-gradient(90deg, #1b254b 0%, #24397d 100%) !important;
+            color: #ffffff !important;
+        }
 
-    /* === BLOQUEA SCROLL HORIZONTAL EN TODA LA PÁGINA === */
-    html, body {
-        width: 100%;
-        max-width: 100vw !important;
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
-        height: auto !important;
-        position: relative;
-    }
+        header#main-header a {
+            color: #ffffff !important;
+        }
 
-    /* === ASEGURA QUE NINGÚN CONTENEDOR DESBORDE === */
-    *, *::before, *::after {
-        box-sizing: border-box;
-    }
+        header#main-header a:hover {
+            color: #c7d7ff !important;
+        }
 
-    main, section, header, footer, div, #app, .page-wrapper, .main-content, [wire\\:id], [x-data] {
-        overflow-x: hidden !important;
-        max-width: 100vw !important;
-    }
+        /* Efecto vidrio esmerilado */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
 
-    [x-cloak], [wire\\:loading], [wire\\:offline] {
-        display: initial !important;
-        overflow: visible !important;
-    }
+        /* Ítems del menú desplegable */
+        .menu-item {
+            color: #f1f1f1;
+            transition: all 0.2s ease-in-out;
+        }
 
-    /* === PREVIENE DESBORDES DE CLASES DE ALTURA === */
-    [class*="h-screen"], [class*="min-h-screen"] {
-        height: auto !important;
-        min-height: 0 !important;
-    }
+        .menu-item:hover {
+            background-color: rgba(99, 102, 241, 0.25);
+            color: #ffffff;
+            transform: translateX(2px);
+        }
 
-    /* === AJUSTE PARA FONDOS FIJOS (como bg-fixed) === */
-    .bg-fixed {
-        background-attachment: scroll !important;
-        background-size: cover;
-    }
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background-color: #25D366;
+            color: #FFF;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            transition: transform .2s ease;
+        }
 
-    /* === SWIPER FIX === */
-    .swiper, .swiper-wrapper, .swiper-slide {
-        max-width: 100vw !important;
-        overflow-x: hidden !important;
-    }
+        .whatsapp-float:hover {
+            transform: scale(1.12);
+        }
 
-    /* === WHATSAPP FLOTANTE === */
-    .whatsapp-float {
-        position: fixed;
-        width: 60px;
-        height: 60px;
-        bottom: 25px;
-        right: 25px;
-        background-color: #25D366;
-        color: #FFF;
-        border-radius: 50%;
-        text-align: center;
-        font-size: 32px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-        z-index: 999;
-        transition: transform .2s ease;
-    }
-
-    .whatsapp-float:hover {
-        transform: scale(1.12);
-    }
-
-    /* === SWIPER NAVEGACIÓN === */
-    .swiper-button-next::after,
-    .swiper-button-prev::after {
-        font-size: 24px !important;
-        font-weight: bold;
-    }
-</style>
-
-
-    <title>{{ $title ?? 'Instituto Superior Fermosa' }}</title>
+        html,
+        body {
+            height: auto !important;
+            min-height: 0 !important;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+        }
+    </style>
 </head>
 
-<body class="font-sans antialiased bg-gray-100">
+<body class="bg-gray-100 flex flex-col overflow-x-hidden">
+
 
     <!-- HEADER -->
-    <header 
-        id="main-header" 
-        class="bg-gray-700 fixed top-0 left-0 w-full z-50 shadow-lg transition-transform duration-300 ease-in-out"
-    >
+    <header id="main-header" class="shadow-lg sticky top-0 z-10 transition-all duration-300">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-            <a href="{{ route('inicio') }}" class="flex items-center text-xl font-extrabold text-white hover:text-indigo-200 transition tracking-wider">
-                <img src="{{ asset('images/logo1.jpeg') }}" alt="Logo Instituto Superior Fermosa" class="h-8 mr-3"> 
+            <!-- Logo-->
+            <a href="{{ route('inicio') }}"
+                class="flex items-center text-xl font-extrabold hover:text-indigo-200 transition tracking-wider">
+                <img src="{{ asset('images/logo1.jpeg') }}" alt="Logo Instituto Superior Fermosa"
+                    class="h-8 mr-3 rounded-md shadow-sm border border-indigo-200">
                 Instituto Superior Fermosa
             </a>
 
-            <div class="flex space-x-6">
-                <a href="{{ route('inicio') }}" class="text-white hover:text-indigo-200 transition font-medium flex items-center">
-                    <i class="fas fa-home mr-1 text-blue-400"></i> Inicio
+            <div class="flex space-x-6 items-center">
+                {{-- INICIO --}}
+                <a href="{{ route('inicio') }}" class="font-medium flex items-center">
+                    <i class="fas fa-home mr-1 text-blue-300"></i>
+                    Inicio
                 </a>
-                <a href="{{ route('carreras') }}" class="text-white hover:text-indigo-200 transition font-medium flex items-center">
-                    <i class="fas fa-graduation-cap mr-1 text-blue-400"></i> Carreras
-                </a>
-                <a href="{{ route('requisitos') }}" class="text-white hover:text-indigo-200 transition font-medium flex items-center">
-                    <i class="fas fa-file-alt mr-1 text-blue-400"></i> Requisitos Inscripción
-                </a>
-                <a href="{{ route('convenios') }}" class="text-white hover:text-indigo-200 transition font-medium flex items-center">
-                    <i class="fas fa-university mr-1 text-blue-400"></i> Universidades
-                </a>
-                <a href="{{ route('login') }}" class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-3 py-1 rounded-md transition duration-200 shadow flex items-center">
-                    <i class="fas fa-user-circle mr-2"></i> Panel Admin
+
+                {{-- CARRERAS (Desplegable con blur y sombra) --}}
+                <div x-data="{ open:false }" class="relative">
+                    <button @click="open = !open"
+                        class="flex items-center gap-1 font-medium focus:outline-none hover:drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]">
+                        <i class="fas fa-graduation-cap text-blue-300"></i>
+                        Carreras
+                        <svg class="w-4 h-4 transform transition-transform duration-200"
+                            :class="{ 'rotate-180' : open }" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+
+                    {{-- Dropdown premium con efecto blur --}}
+                    <div x-show="open" @click.away="open=false"
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 transform scale-95"
+                        x-transition:enter-end="opacity-100 transform scale-100"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="opacity-100 transform scale-100"
+                        x-transition:leave-end="opacity-0 transform scale-95"
+                        class="absolute left-0 mt-3 w-64 rounded-2xl shadow-2xl border border-indigo-200 z-50 overflow-hidden"
+                        style="background: linear-gradient(180deg, rgba(28,37,82,0.95) 0%, rgba(35,54,115,0.93) 100%);
+                        backdrop-filter: blur(8px);
+                        -webkit-backdrop-filter: blur(8px);
+                        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);">
+
+                        <ul class="py-2 max-h-64 overflow-y-auto">
+                            @forelse($menuCarreras ?? [] as $c)
+                            <li>
+                                <a href="{{ route('carreras.show', $c->id) }}"
+                                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-100 hover:bg-indigo-500/30 hover:text-white transition-all duration-200">
+                                    <i class="fas fa-book text-indigo-300"></i>
+                                    {{ $c->nombre }}
+                                </a>
+                            </li>
+                            @empty
+                            <li class="px-4 py-2 text-sm text-gray-200 text-center">No hay carreras disponibles</li>
+                            @endforelse
+                        </ul>
+                    </div>
+
+                </div>
+
+                {{-- PANEL ADMIN --}}
+                <a href="{{ route('login') }}"
+                    class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-3 py-1 rounded-md transition duration-200 shadow flex items-center">
+                    <i class="fas fa-user-circle mr-2"></i>
+                    Panel Admin
                 </a>
             </div>
         </nav>
     </header>
 
-    <!-- CONTENIDO -->
-    <main class="pt-20">
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow">
+
         {{ $slot }}
     </main>
 
     <!-- FOOTER -->
-    <footer 
-        x-data="{ isVisible: false }"
-        x-init="
-            let observer = new IntersectionObserver(entries => {
-                isVisible = entries[0].isIntersecting;
-            }, { threshold: 0.1 });
-            observer.observe($el);
-        "
-        class="bg-gray-900 text-gray-300 py-12 mt-auto border-t border-gray-700 transition-all duration-1000 ease-in-out"
-        :class="{
-            'opacity-0 translate-y-10': !isVisible,
-            'opacity-100 translate-y-0': isVisible
-        }"
-    >
+    <footer class="bg-gray-900 text-gray-300 py-12 mt-auto border-t border-gray-700">
         <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl">
             <div>
                 <h3 class="text-white text-xl font-semibold mb-3">Instituto Superior Fermosa</h3>
                 <p class="text-sm leading-relaxed">
-                    Formación académica con estándares de excelencia, compromiso institucional
-                    y enfoque en la transformación profesional de nuestros estudiantes.
+                    Formación académica con estándares de excelencia,
+                    compromiso institucional y enfoque en la
+                    transformación profesional de nuestros estudiantes.
                 </p>
                 <div class="flex space-x-3 mt-5">
                     <a href="https://www.facebook.com/ISFermosa/?locale=es_LA" target="_blank" title="Facebook"
-                       class="w-9 h-9 flex items-center justify-center rounded-full border border-gray-500 hover:border-indigo-500 hover:text-indigo-400 transition">
+                        class="w-9 h-9 flex items-center justify-center rounded-full border border-gray-500 hover:border-indigo-500 hover:text-indigo-400 transition">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a href="https://www.instagram.com/institutosuperiorfermosa?igsh=NTc4MTIwNjQ2YQ==" target="_blank" title="Instagram"
-                       class="w-9 h-9 flex items-center justify-center rounded-full border border-gray-500 hover:border-indigo-500 hover:text-indigo-400 transition">
+                    <a href="https://www.instagram.com/institutosuperiorfermosa?igsh=NTc4MTIwNjQ2YQ==" target="_blank"
+                        title="Instagram"
+                        class="w-9 h-9 flex items-center justify-center rounded-full border border-gray-500 hover:border-indigo-500 hover:text-indigo-400 transition">
                         <i class="fab fa-instagram"></i>
                     </a>
                     <a href="#" target="_blank" title="LinkedIn"
-                       class="w-9 h-9 flex items-center justify-center rounded-full border border-gray-500 hover:border-indigo-500 hover:text-indigo-400 transition">
+                        class="w-9 h-9 flex items-center justify-center rounded-full border border-gray-500 hover:border-indigo-500 hover:text-indigo-400 transition">
                         <i class="fab fa-linkedin-in"></i>
                     </a>
                 </div>
@@ -200,10 +219,9 @@
             <div>
                 <h3 class="text-white text-xl font-semibold mb-3">Ubicación</h3>
                 <div class="rounded-lg overflow-hidden shadow-lg h-[220px]">
-                    <iframe 
+                    <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3593.6366037286466!2d-58.17519632420485!3d-26.16668386348483!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x945be11b2238382d%3A0xc02e4d2938c0f585!2sMaip%C3%BA%20850%2C%20P3600BMB%2C%20Formosa!5e0!3m2!1ses-419!2sar!4v1699042500000!5m2!1ses-419!2sar"
-                        class="w-full h-full" style="border:0;" allowfullscreen="" loading="lazy">
-                    </iframe>
+                        class="w-full h-full border-0" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
         </div>
@@ -213,56 +231,13 @@
         </div>
     </footer>
 
-    <!-- WHATSAPP -->
-    <a href="https://wa.me/549370699344?text=Hola,%20quisiera%20recibir%20informaci%C3%B3n"
-       class="whatsapp-float" target="_blank" aria-label="Chat por WhatsApp">
+    <!-- WhatsApp -->
+    <a href="https://wa.me/549370699344?text=Hola,%20quisiera%20recibir%20información" class="whatsapp-float"
+        target="_blank" aria-label="Chat por WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
 
     @livewireScripts
-    @stack('scripts')
-
-    <!-- SCRIPTS -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
-    <script>
-        // Animación del Header
-        const header = document.querySelector('#main-header');
-        let lastScrollY = window.scrollY;
-
-        window.addEventListener('scroll', () => {
-            const currentScrollY = window.scrollY;
-            if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                header.classList.add('-translate-y-full');
-            } else {
-                header.classList.remove('-translate-y-full');
-            }
-            lastScrollY = currentScrollY;
-        });
-
-        // AOS
-        AOS.init({
-            duration: 800,
-            once: true
-        });
-
-        // Swiper
-        var swiper = new Swiper(".mySwiper", {
-            loop: true,
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-            },
-        });
-    </script>
 </body>
+
 </html>

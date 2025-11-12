@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Livewire;
+
 use App\Models\Requisito;
 use Livewire\Component;
 
@@ -11,7 +13,7 @@ class Requisitos extends Component
     {
         $this->requisitos = Requisito::all();
     }
-    
+
     public function render()
     {
         return view('livewire.requisitos')

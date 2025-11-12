@@ -1,0 +1,113 @@
+<div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
+            <!-- Mensaje de bienvenida -->
+            <div class="p-6 bg-white shadow rounded-lg">
+                <h1 class="text-2xl font-bold text-gray-800">Bienvenido al Panel Administrativo</h1>
+                <p class="text-gray-600 mt-2">Selecciona una opción del menú lateral para comenzar.</p>
+            </div>
+
+            <!-- Grid de tarjetas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 justify-center">
+
+                <!-- ===== TARJETA 1: CARRERAS ===== -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-gray-900 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mb-4" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                            <h3 class="text-3xl font-bold">CARRERAS</h3>
+                            <p class="mt-2 text-indigo-100">Gira para ver opciones</p>
+                        </div>
+                        <div class="flip-card-back bg-gray-500 text-white">
+                            <h4 class="text-2xl font-semibold mb-4">Gestionar Carreras</h4>
+                            <p class="mb-6 text-gray-300 text-sm">Administra la oferta académica.</p>
+                            <div class="w-full max-w-xs">
+                                <a href="{{ route('admin.carreras.index') }}"
+                                    class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:scale-105">
+                                    Gestionar Carreras
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TARJETA 2: REQUISITOS ===== -->
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-gray-900 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mb-4" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <h3 class="text-3xl font-bold">REQUISITOS</h3>
+                            <p class="mt-2 text-teal-100">Gira para ver opciones</p>
+                        </div>
+                        <div class="flip-card-back bg-gray-500 text-white">
+                            <h4 class="text-2xl font-semibold mb-4">Gestionar Requisitos</h4>
+                            <p class="mb-6 text-gray-300 text-sm">Define los requisitos de ingreso.</p>
+                            <div class="w-full max-w-xs">
+                                <a href="{{ route('admin.requisitos.index') }}"
+                                    class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:scale-105">
+                                    Gestionar Requisitos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 280px;
+            perspective: 1000px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.7s;
+            transform-style: preserve-3d;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+    </style>
+</div>

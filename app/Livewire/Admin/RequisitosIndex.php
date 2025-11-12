@@ -5,62 +5,110 @@ namespace App\Livewire\Admin;
 use App\Models\Requisito;
 use Livewire\Component;
 
-class RequisitosIndex extends Component
+class RequisitosIndex extends BaseAdminComponent
 {
-    // Datos del modelo
+    // Propiedades
     public $requisitoId;
-    public $titulo, $detalle;
-    
-    // Estado de la UI
+    public $titulo;
+    public $detalle;
+
+    // Control del formulario
     public $mostrarFormulario = false;
 
+    // Reglas de validación
+    protected $rules = [
+        'titulo' => 'required|string|max:255',
+        'detalle' => 'required|string',
+    ];
+
+    protected $messages = [
+        'titulo.required' => 'El campo título es obligatorio.',
+        'titulo.max' => 'El título no puede superar los 255 caracteres.',
+        'detalle.required' => 'Debe ingresar una descripción o detalle.',
+    ];
+
+    /**
+     * Renderiza la vista principal con layout del panel admin.
+     */
     public function render()
     {
-        $requisitos = Requisito::all();
-        return view('livewire.admin.requisitos-index', compact('requisitos'))
-            ->layout('layouts.app', ['header' => 'Gestión de Requisitos']);
+        return $this->renderAdmin('livewire.admin.requisitos-index', [
+            'requisitos' => Requisito::latest()->get(),
+            'title' => 'Gestión de Requisitos de Inscripción',
+        ]);
     }
 
+    /**
+     * Muestra formulario vacío para crear un nuevo requisito.
+     */
     public function crear()
     {
-        $this->reset(); 
+        $this->reset(['requisitoId', 'titulo', 'detalle']);
         $this->mostrarFormulario = true;
+        $this->resetValidation();
     }
-    
+
+    /**
+     * Carga un requisito existente para editar.
+     */
     public function editar($id)
     {
         $requisito = Requisito::findOrFail($id);
+
         $this->requisitoId = $requisito->id;
         $this->titulo = $requisito->titulo;
-        $this->detalle = $requisito->detalle;
-        
+        $this->detalle = $requisito->descripcion; // usa el nombre real del campo en BD
         $this->mostrarFormulario = true;
+
+        $this->resetValidation();
     }
 
+    /**
+     * Guarda o actualiza un requisito.
+     */
     public function guardar()
     {
-        $this->validate([
-            'titulo' => 'required|string|max:255',
-            'detalle' => 'required|string',
-        ]);
-        
-        $datos = $this->only(['titulo', 'detalle']);
+        $this->validate();
+
+        $data = [
+            'titulo' => trim($this->titulo),
+            'descripcion' => trim($this->detalle),
+        ];
 
         if ($this->requisitoId) {
-            Requisito::find($this->requisitoId)->update($datos);
-            session()->flash('message', '✅ Requisito actualizado con éxito.');
+            Requisito::findOrFail($this->requisitoId)->update($data);
+            session()->flash('success', '✅ Requisito actualizado con éxito.');
         } else {
-            Requisito::create($datos);
-            session()->flash('message', '✅ Requisito creado con éxito.');
+            Requisito::create($data);
+            session()->flash('success', '✅ Requisito creado con éxito.');
         }
 
-        $this->mostrarFormulario = false;
-        $this->reset(); 
+        $this->cerrarFormulario();
+
+        // 🔄 Actualizar lista en el DOM sin recargar la vista manualmente
+        $this->dispatch('requisitosActualizados');
     }
-    
+
+    /**
+     * Elimina un requisito existente.
+     */
     public function eliminar($id)
     {
-        Requisito::destroy($id);
-        session()->flash('message', '🗑️ Requisito eliminado.');
+        if ($requisito = Requisito::find($id)) {
+            $requisito->delete();
+            session()->flash('success', '🗑️ Requisito eliminado correctamente.');
+            $this->dispatch('requisitosActualizados');
+        } else {
+            session()->flash('error', 'El requisito no existe o ya fue eliminado.');
+        }
+    }
+
+    /**
+     * Limpia el formulario y lo oculta.
+     */
+    public function cerrarFormulario()
+    {
+        $this->reset(['requisitoId', 'titulo', 'detalle', 'mostrarFormulario']);
+        $this->resetValidation();
     }
 }
