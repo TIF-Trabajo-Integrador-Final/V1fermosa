@@ -70,3 +70,6 @@ URL        ---           Ruta Nombrada     ---     Controlador          ---     
 /convenios              convenios.index      ConvenioController@index           Listado de Universidades con convenio.
 /carreras                carreras.index       CarreraController@index           Listado general de la oferta.
 /carreras/{slug}          carreras.show       CarreraController@show            Detalle de una carrera específica.
+
+# Sincronizando CI/CD
+
