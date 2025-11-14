@@ -1,0 +1,39 @@
+image: php:8.2
+
+services:
+  - mysql:latest
+
+variables:
+  MYSQL_DATABASE: ci_db
+  MYSQL_ROOT_PASSWORD: root
+  DB_HOST: mysql
+  DB_USERNAME: root
+  DB_PASSWORD: root
+  DB_DATABASE: ci_db
+
+stages:
+  - prepare
+  - test
+
+before_script:
+  - apt-get update && apt-get install -y unzip git libzip-dev
+  - docker-php-ext-install pdo_mysql zip
+  - curl -sS https://getcomposer.org/installer | php
+  - php composer.phar install
+  - php artisan key:generate
+  - php artisan migrate --force
+
+prepare:
+  stage: prepare
+  script:
+    - echo "Preparando entorno CI/CD…"
+  artifacts:
+    paths:
+      - vendor/
+    expire_in: 1 hour
+
+tests:
+  stage: test
+  script:
+    - vendor/bin/phpunit --testdox
+  allow_failure: false
