@@ -1,102 +1,267 @@
-<div>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Gestión de Carreras') }}
-        </h2>
-    </x-slot>
+<div class="max-w-7xl mx-auto">
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+  <!-- Título principal -->
+  <h1 class="text-3xl font-bold mb-6 text-white text-center">Carreras</h1>
 
-                @if (session()->has('message'))
-                    <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
-                        {{ session('message') }}
+  <!-- MENSAJES -->
+  @if (session('ok'))
+  <div class="p-3 mb-4 bg-green-200 text-green-900 rounded shadow">
+    {{ session('ok') }}
+  </div>
+  @endif
+
+  @if (session('error'))
+  <div class="p-3 mb-4 bg-red-200 text-red-900 rounded shadow">
+    {{ session('error') }}
+  </div>
+  @endif
+
+  <!-- BOTÓN CREAR -->
+  <div class="mb-4">
+    <button wire:click="mostrarFormulario()"
+      class="bg-white text-blue-800 hover:bg-gray-100 px-4 py-2 rounded shadow border border-white/20">
+      + Crear Carrera
+    </button>
+  </div>
+
+  <!-- TABLA -->
+  <div class="mt-6 bg-white shadow-xl rounded-xl overflow-x-auto border border-gray-200">
+
+    <!-- CABECERA -->
+    <div class="hidden md:grid bg-blue-900 text-white text-sm font-semibold py-3 px-4 gap-2 w-full" style="grid-template-columns:80px 1.2fr 1fr 1fr 0.8fr 1fr 1.8fr 1fr 0.9fr;">
+      <div class="flex items-center justify-center">Imagen</div>
+      <div class="flex items-center justify-center">Nombre</div>
+      <div class="flex items-center justify-center">Nivel</div>
+      <div class="flex items-center justify-center">Modalidad</div>
+      <div class="flex items-center justify-center">Duración</div>
+      <div class="flex items-center justify-center">Perfil</div>
+      <div class="flex items-center justify-center">Descripción</div>
+      <div class="flex items-center justify-center">Requisitos</div>
+      <div class="flex items-center justify-center">Acciones</div>
+    </div>
+
+    <!-- FILAS -->
+    <div class="divide-y divide-gray-200">
+      @forelse ($carreras as $carrera)
+      <div class="hidden md:grid p-4 gap-2 items-start text-gray-700 w-full" style="grid-template-columns:80px 1.2fr 1fr 1fr 0.8fr 1fr 1.8fr 1fr 0.9fr;">
+
+        <!-- IMAGEN -->
+        <div class="flex justify-center items-center">
+          @if ($carrera->imagen)
+          <img src="{{ asset('storage/' . $carrera->imagen) }}" class="h-14 w-14 rounded object-cover shadow" alt="{{ $carrera->nombre }}" onerror="this.style.display='none'" />
+          @else
+          <span class="text-gray-400 italic text-xs text-center">Sin imagen</span>
+          @endif
+        </div>
+
+        <!-- NOMBRE -->
+        <div class="font-semibold text-sm min-w-0 truncate">{{ Str::limit($carrera->nombre, 80) }}</div>
+
+        <!-- NIVEL -->
+        <div class="text-sm min-w-0">{{ $carrera->nivel?->nombre }}</div>
+
+        <!-- MODALIDAD -->
+        <div class="text-sm min-w-0">{{ $carrera->modalidad }}</div>
+
+        <!-- DURACIÓN -->
+        <div class="text-sm min-w-0">{{ $carrera->duracion_meses }} meses</div>
+
+        <!-- PERFIL PROFESIONAL -->
+        <div class="text-sm min-w-0 break-words">{{ Str::limit($carrera->perfil_profesional ?? $carrera->perfilProfesional ?? '', 120) }}</div>
+
+        <!-- DESCRIPCIÓN -->
+        <div class="text-sm min-w-0 break-words">{{ Str::limit($carrera->descripcion, 140) }}</div>
+
+        <!-- REQUISITOS -->
+        <div class="text-xs">
+          @forelse ($carrera->requisitos as $req)
+          <div class="mb-1">
+            <span class="inline-block max-w-[160px] bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold break-words">
+              {{ Str::limit($req->descripcion, 30) }}
+            </span>
+          </div>
+          @empty
+          <span class="text-gray-200 italic text-xs">Sin requisitos</span>
+          @endforelse
+        </div>
+
+        <!-- ACCIONES -->
+        <div class="flex gap-1 justify-center">
+          <button wire:click="mostrarFormulario({{ $carrera->id }})" class="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs font-medium whitespace-nowrap">Editar</button>
+          <button wire:click="eliminar({{ $carrera->id }})" class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs font-medium whitespace-nowrap" onclick="return confirm('¿Estás seguro?')">Eliminar</button>
+        </div>
+
+      </div>
+      @empty
+      <div class="p-4 text-center text-gray-500">
+        No hay carreras registradas.
+      </div>
+      @endforelse
+    </div>
+  </div>
+
+  <!-- ========== MODAL ========== -->
+ <!-- ========== MODAL ========== -->
+@if ($isFormVisible)
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+
+    <!-- CONTENEDOR DEL MODAL (CORRECCIÓN SCROLL + RESPONSIVE) -->
+    <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl relative text-gray-900
+                flex flex-col max-h-[90vh] overflow-y-auto overflow-x-hidden">
+
+        <!-- BOTÓN CERRAR -->
+        <button wire:click="resetFormulario"
+            class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl z-20">
+            ✕
+        </button>
+
+        <!-- CABECERA -->
+        <div class="p-6 border-b">
+            <h2 class="text-2xl font-bold">
+                {{ $carrera_id ? 'Editar Carrera' : 'Nueva Carrera' }}
+            </h2>
+        </div>
+
+        <!-- CONTENIDO SCROLLEABLE -->
+        <div class="p-6 space-y-6">
+
+            <form wire:submit.prevent="guardar" class="space-y-6">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Nombre -->
+                    <div>
+                        <label class="font-semibold text-sm">Nombre</label>
+                        <input type="text" wire:model="nombre"
+                            class="w-full bg-gray-100 border-gray-300 rounded px-3 py-2">
+                        @error('nombre') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
                     </div>
-                @endif
-                
-                <x-primary-button wire:click="crear" class="mb-4">
-                    + Crear Nueva Carrera
-                </x-primary-button>
 
-                @if ($mostrarFormulario)
-                    <div class="mb-6 p-4 border rounded-lg bg-gray-50">
-                        <h3 class="text-lg font-medium mb-4">{{ $carreraId ? 'Editar Carrera' : 'Crear Nueva Carrera' }}</h3>
-                        
-                        <form wire:submit.prevent="guardar">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <x-input-label for="nombre" :value="__('Nombre de la Carrera')" />
-                                    <x-text-input wire:model.live="nombre" id="nombre" class="block mt-1 w-full" type="text" required />
-                                    <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
-                                </div>
-                                <div>
-                                    <x-input-label for="nivel" :value="__('Nivel (Terciario, Posgrado)')" />
-                                    <x-text-input wire:model.live="nivel" id="nivel" class="block mt-1 w-full" type="text" required />
-                                    <x-input-error :messages="$errors->get('nivel')" class="mt-2" />
-                                </div>
-                            </div>
-                            
-                            <div class="mt-4">
-                                <x-input-label for="descripcion" :value="__('Descripción')" />
-                                <textarea wire:model.live="descripcion" id="descripcion" rows="3" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required></textarea>
-                                <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                <div>
-                                    <x-input-label for="matricula" :value="__('Arancel Matrícula ($)')" />
-                                    <x-text-input wire:model.live="arancel_matricula" id="matricula" class="block mt-1 w-full" type="number" step="0.01" required />
-                                    <x-input-error :messages="$errors->get('arancel_matricula')" class="mt-2" />
-                                </div>
-                                <div>
-                                    <x-input-label for="mensual" :value="__('Arancel Mensual ($)')" />
-                                    <x-text-input wire:model.live="arancel_mensual" id="mensual" class="block mt-1 w-full" type="number" step="0.01" required />
-                                    <x-input-error :messages="$errors->get('arancel_mensual')" class="mt-2" />
-                                </div>
-                            </div>
-
-                            <div class="flex items-center justify-end mt-4">
-                                <x-secondary-button wire:click="$set('mostrarFormulario', false)" class="mr-2">Cancelar</x-secondary-button>
-                                <x-primary-button type="submit">
-                                    {{ $carreraId ? 'Actualizar Carrera' : 'Guardar Carrera' }}
-                                </x-primary-button>
-                            </div>
-                        </form>
+                    <!-- Nivel -->
+                    <div>
+                        <label class="font-semibold text-sm">Nivel</label>
+                        <select wire:model="nivel_id"
+                            class="w-full bg-gray-100 border-gray-300 rounded px-3 py-2">
+                            <option value="">Seleccionar nivel...</option>
+                            @foreach ($niveles as $nivel)
+                            <option value="{{ $nivel->id }}">{{ $nivel->nombre }}</option>
+                            @endforeach
+                        </select>
+                        @error('nivel_id') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
                     </div>
-                @endif
-                
-                <div class="overflow-x-auto mt-6">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
-                            <tr>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nivel</th>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Arancel</th>
-                                <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse ($carreras as $carrera)
-                                <tr>
-                                    <td class="px-6 py-4">{{ $carrera->nombre }}</td>
-                                    <td class="px-6 py-4">{{ $carrera->nivel }}</td>
-                                    <td class="px-6 py-4">M: ${{ number_format($carrera->arancel_matricula) }} / S: ${{ number_format($carrera->arancel_mensual) }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                        <button wire:click="editar({{ $carrera->id }})" class="text-indigo-600 hover:text-indigo-900 mx-1">Editar</button>
-                                        <button wire:click="eliminar({{ $carrera->id }})" wire:confirm="¿Estás seguro de eliminar esta carrera?" class="text-red-600 hover:text-red-900 mx-1">Eliminar</button>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">No hay carreras cargadas en el sistema.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+
+                    <!-- Modalidad -->
+                    <div>
+                        <label class="font-semibold text-sm">Modalidad</label>
+                        <input type="text" wire:model="modalidad"
+                            class="w-full bg-gray-100 border-gray-300 rounded px-3 py-2">
+                        @error('modalidad') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Duración -->
+                    <div>
+                        <label class="font-semibold text-sm">Duración (meses)</label>
+                        <input type="number" wire:model="duracion_meses"
+                            class="w-full bg-gray-100 border-gray-300 rounded px-3 py-2">
+                        @error('duracion_meses') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="md:col-span-2">
+                        <label class="font-semibold text-sm">Descripción</label>
+                        <textarea wire:model="descripcion"
+                            class="w-full bg-gray-100 border-gray-300 rounded px-3 py-2"></textarea>
+                        @error('descripcion') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Imagen -->
+                    <div class="md:col-span-2">
+                        <label class="font-semibold text-sm block mb-2">Imagen (máximo 5 MB)</label>
+
+                        <div class="flex gap-6 items-center flex-wrap">
+
+                            <!-- Previsualización -->
+                            <div class="flex flex-col items-center">
+                                @if ($imagen)
+                                <img src="{{ $imagen->temporaryUrl() }}"
+                                    class="h-32 w-32 rounded object-cover border-2 border-green-600">
+                                <p class="text-xs text-green-600 mt-2">Previsualización</p>
+
+                                @elseif ($oldImagen)
+                                <img src="{{ asset('storage/' . $oldImagen) }}"
+                                    class="h-32 w-32 rounded object-cover border-2 border-blue-600">
+                                <p class="text-xs text-blue-600 mt-2">Imagen actual</p>
+
+                                @else
+                                <div class="h-32 w-32 rounded bg-gray-200 flex items-center justify-center border-2 border-dashed border-gray-400">
+                                    <span class="text-xs text-gray-500">Sin imagen</span>
+                                </div>
+                                @endif
+                            </div>
+
+                            <!-- Input -->
+                            <div class="flex-1">
+                                <label class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded border border-blue-300 cursor-pointer font-medium hover:bg-blue-200">
+                                    <input type="file" class="hidden" wire:model="imagen">
+                                    Seleccionar imagen
+                                </label>
+                                <p class="text-xs text-gray-500 mt-2">PNG, JPG, WEBP – Máximo 5MB</p>
+                                @error('imagen') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Perfil profesional -->
+                    <div class="md:col-span-2">
+                        <label class="font-semibold text-sm">Perfil Profesional</label>
+                        <textarea wire:model="perfilProfesional"
+                            class="w-full bg-gray-100 border-gray-300 rounded px-3 py-2"></textarea>
+                        @error('perfilProfesional') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Requisitos -->
+                    <div class="md:col-span-2">
+                        <label class="font-semibold text-sm">Requisitos</label>
+
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 mt-1">
+                            @foreach ($requisitos as $req)
+                            <label class="flex items-center gap-2 text-sm">
+                                <input type="checkbox" wire:model="requisitosSeleccionados" value="{{ $req->id }}">
+                                {{ $req->descripcion }}
+                            </label>
+                            @endforeach
+                        </div>
+
+                        @error('requisitosSeleccionados')
+                        <p class="text-red-600 text-sm">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                 </div>
 
-            </div>
+                <!-- BOTONES -->
+                <div class="flex justify-end gap-4 border-t pt-4">
+                    <button type="button" wire:click="resetFormulario"
+                        class="px-5 py-2 bg-gray-300 hover:bg-gray-400 rounded">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                        class="px-5 py-2 bg-green-700 hover:bg-green-800 text-white rounded">
+                        Guardar
+                    </button>
+                </div>
+
+            </form>
+
         </div>
+
     </div>
+
+</div>
+@endif
+
+
+
 </div>

@@ -4,63 +4,122 @@ namespace App\Livewire\Admin;
 
 use App\Models\Requisito;
 use Livewire\Component;
+use Illuminate\Validation\Rule;
 
 class RequisitosIndex extends Component
 {
-    // Datos del modelo
-    public $requisitoId;
-    public $titulo, $detalle;
-    
-    // Estado de la UI
-    public $mostrarFormulario = false;
+    public $requisitos;
+
+    // Campos del formulario
+    public $requisito_id;
+    public $descripcion;
+    public $isFormVisible = false;
+
+    /**
+     * Reglas de validación corregidas
+     */
+    protected function rules()
+    {
+        return [
+            'descripcion' => 'required|string|max:500', // CAMBIO
+        ];
+    }
+
+    public function mount()
+    {
+        $this->cargarDatos();
+    }
+
+    /**
+     * Carga los requisitos desde la BD
+     */
+    private function cargarDatos()
+    {
+        $this->requisitos = Requisito::orderBy('id', 'desc')->get(); // CAMBIO: ordenado
+    }
 
     public function render()
     {
-        $requisitos = Requisito::all();
-        return view('livewire.admin.requisitos-index', compact('requisitos'))
-            ->layout('layouts.app', ['header' => 'Gestión de Requisitos']);
+        return view('livewire.admin.requisitos-index')
+            ->layout('components.layouts.admin', [
+                'title' => 'Panel Administrativo - Instituto Superior Fermosa'
+            ]);
     }
 
-    public function crear()
+    /**
+     * Muestra el formulario (crear o editar)
+     */
+    public function mostrarFormulario($id = null)
     {
-        $this->reset(); 
-        $this->mostrarFormulario = true;
-    }
-    
-    public function editar($id)
-    {
-        $requisito = Requisito::findOrFail($id);
-        $this->requisitoId = $requisito->id;
-        $this->titulo = $requisito->titulo;
-        $this->detalle = $requisito->detalle;
-        
-        $this->mostrarFormulario = true;
-    }
+        $this->resetFormulario(); // CAMBIO
 
-    public function guardar()
-    {
-        $this->validate([
-            'titulo' => 'required|string|max:255',
-            'detalle' => 'required|string',
-        ]);
-        
-        $datos = $this->only(['titulo', 'detalle']);
+        if ($id) {
+            $req = Requisito::find($id);
 
-        if ($this->requisitoId) {
-            Requisito::find($this->requisitoId)->update($datos);
-            session()->flash('message', '✅ Requisito actualizado con éxito.');
-        } else {
-            Requisito::create($datos);
-            session()->flash('message', '✅ Requisito creado con éxito.');
+            if (!$req) return;
+
+            $this->requisito_id = $req->id;
+            $this->descripcion = $req->descripcion;
         }
 
-        $this->mostrarFormulario = false;
-        $this->reset(); 
+        $this->isFormVisible = true;
     }
-    
+
+    /**
+     * Guarda o actualiza un requisito
+     */
+    public function guardar()
+    {
+        $this->validate();
+
+        $data = [
+            'descripcion' => $this->descripcion,
+        ];
+
+        Requisito::updateOrCreate(
+            ['id' => $this->requisito_id],
+            $data
+        );
+
+        $this->cargarDatos();
+        $this->resetFormulario();
+
+        session()->flash('ok', 'Requisito guardado correctamente.');
+    }
+
+    /**
+     * Elimina un requisito (si no está en uso)
+     */
     public function eliminar($id)
     {
-        Requisito::destroy($id);
-        session()->flash('message', '🗑️ Requisito eliminado.');
+        $req = Requisito::with('carreras')->find($id);
+
+        if (!$req) return;
+
+        if ($req->carreras->count() > 0) {
+            // CAMBIO: evita romper la BD
+            session()->flash('error', 'No es posible eliminar este requisito porque está asignado a una o más carreras.');
+            return;
+        }
+
+        $req->delete();
+
+        $this->cargarDatos();
+
+        session()->flash('ok', 'Requisito eliminado correctamente.');
+    }
+
+    /**
+     * Resetea el formulario del modal
+     */
+    public function resetFormulario()
+    {
+        $this->reset([
+            'requisito_id',
+            'descripcion',
+            'isFormVisible'
+        ]);
+
+        $this->resetValidation();
     }
 }

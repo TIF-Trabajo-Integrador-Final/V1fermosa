@@ -90,9 +90,6 @@
                 {{ __('Gestión de Carreras') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link :href="route('admin.sedes.index')" :active="request()->routeIs('admin.sedes.index')">
-                {{ __('Gestión de Sedes') }}
-            </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('admin.requisitos.index')" :active="request()->routeIs('admin.requisitos.index')">
                 {{ __('Gestión de Requisitos') }}

@@ -1,145 +1,125 @@
 <div>
-    <div class="w-full">
-        <div x-data="{
-                activeSlide: 0,
-                slides: [
-                    '{{ asset('images/carreras.jpg') }}',
-                    '{{ asset('images/logo.jpeg') }}',
-                    '{{ asset('images/carreras.jpg') }}'
-                ],
-                autoplay() {
-                    setInterval(() => {
-                        this.activeSlide = (this.activeSlide + 1) % this.slides.length
-                    }, 7000)
-                },
-                next() {
-                    this.activeSlide = (this.activeSlide + 1) % this.slides.length
-                },
-                prev() {
-                    this.activeSlide = (this.activeSlide - 1 + this.slides.length) % this.slides.length
-                }
-            }"
-             x-init="autoplay()"
-             class="relative h-[450px] shadow-2xl mb-12 rounded-b-lg overflow-hidden">
-            
-            <template x-for="(slide, index) in slides" :key="index">
-                <div x-show="activeSlide === index"
-                     x-transition:opacity.duration.2000ms
-                     class="absolute inset-0 bg-cover bg-center"
-                     :style="'background-image: url(\'' + slide + '\'); background-repeat: no-repeat; background-size: cover; background-position: center;'"></div>
-            </template>
+{{-- FUENTES - Se asegura que Montserrat sea la fuente principal --}}
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-            {{-- COLOR CAMBIADO AQUÍ --}}
-            <div class="absolute inset-0 bg-[#131567] opacity-30"></div>
+<style>
+    * {
+        /* Esto asegura Montserrat para todo si no se especifica otra fuente */
+        font-family: 'Montserrat', sans-serif !important;
+    }
+    /* Clase personalizada si es necesaria, aunque el * anterior ya cubre mucho */
+    .font-montserrat { font-family: 'Montserrat', sans-serif; }
+</style>
 
-            <div class="relative flex flex-col items-start justify-center h-full p-8 md:p-12 lg:p-16 z-20 max-w-7xl mx-auto">
-                <h1 class="text-4xl font-extrabold text-white tracking-wider leading-tight sm:text-5xl md:text-6xl lg:text-7xl"
-                    style="font-family: 'Playfair Display', serif;">
-                    CONOCÉ
-                </h1>
-                <h1 class="text-4xl font-extrabold text-white tracking-wider leading-tight sm:text-5xl md:text-6xl lg:text-7xl mt-2"
-                    style="font-family: 'Playfair Display', serif;">
-                    NUESTRAS OFERTAS
-                </h1>
-                <p class="font-sans text-2xl text-white font-medium mt-6 sm:text-3xl md:text-4xl">
-                    ACADÉMICAS
-                </p>
-            </div>
+{{-- APLICAMOS LA CLASE FONT-MONTSERRAT AL CONTENEDOR PRINCIPAL --}}
+<div class="w-full font-montserrat">
+<div
+    x-data="{
+        active: 0,
+        slides: [
+            '{{ asset('images/alumnos.png') }}',
+            '{{ asset('images/alumnos2.png') }}',
+            '{{ asset('images/alumnos4.png') }}',
+            '{{ asset('images/6.jpeg') }}',
+        ],
+        next() { this.active = (this.active + 1) % this.slides.length },
+        play() { setInterval(() => this.next(), 6000) }
+    }"
+    x-init="play()"
+    class="relative w-full h-[90vh] md:h-[85vh] overflow-hidden bg-[#131567]"
+>
 
-            <div class="absolute inset-0 flex items-center justify-between z-30">
-                {{-- BOTONES DEL SLIDER ACTUALIZADOS --}}
-                <button @click="prev()"
-                        class="ml-4 p-2 bg-[#ced0dd]/70 rounded-full text-[#131567] hover:bg-[#ced0dd] focus:outline-none transition-colors"
-                        aria-label="Anterior">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                </button>
-                <button @click="next()"
-                        class="mr-4 p-2 bg-[#ced0dd]/70 rounded-full text-[#131567] hover:bg-[#ced0dd] focus:outline-none transition-colors"
-                        aria-label="Siguiente">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-            </div>
+    {{-- IMÁGENES — Slow Zoom + Fade --}}
+   <template x-for="(slide, i) in slides" :key="i">
+    <div
+        x-show="active === i"
+        x-transition.opacity.duration.1200ms
+        class="absolute inset-0 w-full h-full"
+    >
+        <img
+            :src="slide"
+            class="w-full h-full object-cover object-top
+                   animate-slow-zoom transform scale-100 md:scale-100"
+        >
+    </div>
+</template>
 
-            <div class="absolute bottom-6 left-0 right-0 flex justify-center space-x-2 z-30">
-                <template x-for="(slide, index) in slides" :key="index">
-                    <button @click="activeSlide = index"
-                            class="w-3 h-3 rounded-full focus:outline-none"
-                            {{-- PUNTOS DE PAGINACIÓN ACTUALIZADOS --}}
-                            :class="{ 'bg-[#131567]': activeSlide === index, 'bg-[#ced0dd]/70 hover:bg-[#ced0dd]': activeSlide !== index }"
-                            :aria-label="'Ir a la imagen ' + (index + 1)"></button>
-                </template>
-            </div>
+{{-- Fade inferior sutil --}}
+<div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b
+            from-transparent to-[#E0EFFF] pointer-events-none"></div>
 
-        </div>
-    </div>
 
-    <div class="container mx-auto px-6 max-w-7xl mb-16">
+    {{-- OVERLAY Premium --}}
+    {{-- TEXTO ABAJO DEL HERO --}}
+<div class="absolute inset-x-0 bottom-10 flex flex-col items-center 
+            text-center px-6 md:px-10 z-20 font-montserrat">
 
-        <h2 class="text-4xl font-extrabold text-[#131567] text-center mb-10">Nuestras Carreras Destacadas</h2>
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white drop-shadow-lg leading-tight">
+        CONOCÉ NUESTRAS OFERTAS
+    </h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <p class="mt-2 text-4xl md:text-5xl lg:text-6xl text-white font-semibold drop-shadow-lg">
+        ACADÉMICAS
+    </p>
+</div>
 
-            @php
-            $ofertas_principales = [
-            [
-            'nombre' => '',
-            'descripcion' => 'Aprende a gestionar la logística, el mercado y las normativas globales para expandir negocios a nivel mundial.',
-            'imagen' => 'comercio internacional.jpeg',
-            ],
-            [
-            'nombre' => '',
-            'descripcion' => 'Conviértete en un desarrollador full-stack, creando aplicaciones web, móviles y sistemas innovadores.',
-            'imagen' => 'desarrollo de software.jpeg',
-            ],
-            [
-            'nombre' => '',
-            'descripcion' => 'Domina los procesos administrativos y legales de facturación médica, esencial para cualquier institución de salud.',
-            'imagen' => 'facturación en salud.jpeg',
-            ],
-            [
-            'nombre' => '',
-            'descripcion' => 'Adquiere las herramientas de gestión, finanzas y marketing para liderar y hacer crecer cualquier tipo de empresa.',
-            'imagen' => 'negocios y empresas.jpeg',
-            ],
-            ];
-            @endphp
+</div>
 
-            @foreach($ofertas_principales as $index => $oferta)
-            <div class="card-container" title="Pasa el puntero o toca para girar" data-card="{{ $index }}">
-                <div class="card-inner group">
 
-                    <div class="card-face card-front">
-                        <img src="{{ asset('images/' . $oferta['imagen']) }}" alt="{{ $oferta['nombre'] }}"
-                             class="card-img">
-                        <div class="card-front-overlay">
-                            <h3 class="card-title">{{ $oferta['nombre'] }}</h3>
-                        </div>
+    {{-- ======================= LISTADO DE CARRERAS ======================= --}}
+ <div class="container mx-auto px-6 max-w-7xl mb-16">
+
+       <h1 class="text-5xl font-extrabold text-[#131567] mb-10 text-center leading-tight" data-aos="fade-down">
+                Nuestras Carreras
+            </h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+
+            @foreach($carreras as $carrera)
+            <div
+                class="bg-[#ced0dd]/95 shadow-xl rounded-xl p-6 border-t-4 border-[#131567] overflow-hidden transition-transform duration-300 hover:scale-[1.03]"
+                data-aos="fade-up">
+
+                <div class="flex flex-col items-center text-center space-y-4">
+
+                    {{-- Imagen unificada tipo “Glass Zoom” --}}
+                   <div class="relative overflow-hidden rounded-xl shadow-lg 
+                                w-full h-64 bg-white/40 backdrop-blur-md group">
+
+                        <img src="{{ asset('storage/' . $carrera->imagen) }}"
+                            alt="{{ $carrera->nombre }}"
+                            class="w-full h-64 object-cover object-top transition-transform duration-700 ease-out group-hover:scale-110"
+>
                     </div>
 
-                    <div class="card-face card-back bg-[#131567]">
-                        <div class="card-back-content">
-                            <h4 class="text-2xl font-bold mb-2">{{ $oferta['nombre'] }}</h4>
-                            <p class="mb-4 text-sm">{{ $oferta['descripcion'] }}</p>
-                            <a href="{{ route('requisitos') }}"
-                               {{-- HOVER DEL BOTÓN ACTUALIZADO --}}
-                               class="inline-block px-4 py-2 border border-white rounded text-sm font-medium hover:bg-white hover:text-[#131567] transition">
-                                Requisitos
-                            </a>
-                        </div>
-                    </div>
+
+                    {{-- Título --}}
+                    <h3 class="text-2xl font-bold text-[#131567]">
+                        {{ $carrera->nombre }}
+                    </h3>
+
+                    {{-- Descripción --}}
+                    <p class="text-gray-800 text-sm leading-relaxed">
+                        {{ Str::limit($carrera->descripcion, 120) }}
+                    </p>
+
+                    {{-- Botón --}}
+                    <a href="{{ route('carrera.show', $carrera->id) }}"
+                        class="inline-block px-4 py-2 border border-[#131567] text-[#131567] font-semibold rounded-lg hover:bg-[#131567] hover:text-white transition-colors">
+                        Conocer más
+                    </a>
+
                 </div>
+
             </div>
             @endforeach
-        </div>
-    </div>
+        </div>
 
 
-    <style>
-        /* contenedor de carta */
+</div>
+
+{{-- ESTILOS --}}
+<style>
+     /* contenedor de carta */
         .card-container {
             perspective: 1200px;
         }
@@ -153,6 +133,7 @@
             transform-style: preserve-3d;
             border-radius: 12px;
         }
+
         .card-container:hover .card-inner,
         .card-container.is-flipped .card-inner {
             transform: rotateY(180deg) scale(1.03);
@@ -216,30 +197,21 @@
                 height: 280px;
             }
         }
-    </style>
+    html, body { overflow-x: hidden !important;}
 
-    <script>
-        (function () {
-            // Añade toggle 'is-flipped' al tocar la card (mobile)
-            document.addEventListener('DOMContentLoaded', function () {
-                var cards = document.querySelectorAll('.card-container');
-                cards.forEach(function (card) {
-                    // on touch devices, toggle on click
-                    card.addEventListener('click', function (e) {
-                        // If click on a link inside, let it navigate
-                        if (e.target.closest('a')) return;
-                        // Toggle flipped state
-                        card.classList.toggle('is-flipped');
-                    });
+    /* Definición de la fuente Montserrat */
+    /* El * en la sección <style> superior ya hace mucho del trabajo */
+    .font-montserrat { font-family: 'Montserrat', sans-serif; }
 
-                    // Remove flip when clicking outside (optional)
-                    document.addEventListener('click', function (ev) {
-                        if (!card.contains(ev.target)) {
-                            card.classList.remove('is-flipped');
-                        }
-                    });
-                });
-            });
-        })();
-    </script>
-</div>
+    .premiumSwiper { height: 430px; }
+    .premium-slide-img { position: absolute; inset: 0; background-size: cover; background-position: center; transition: 2.5s ease; }
+    .premium-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.4)); }
+    .premium-text { position: absolute; bottom: 70px; left: 60px; color:white; opacity:0; transform:translateY(20px); transition:.9s; }
+    .swiper-slide-active .premium-text { opacity:1; transform:translateY(0); }
+
+    .premium-arrow { color:white !important; scale:1.3; transition:.3s; }
+    .premium-arrow:hover { scale:1.5; color:#c6d7ff !important; }
+
+    @keyframes slowZoom { 0%{transform:scale(1);} 100%{transform:scale(1.1);} }
+    .animate-slow-zoom { animation: slowZoom 20s infinite alternate linear; }
+</style>

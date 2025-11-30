@@ -6,25 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-            Schema::create('carreras', function (Blueprint $table) {
-        $table->id();
-        $table->string('nombre', 150)->unique();
-        $table->string('nivel', 50); // Nivel: terciario, posgrados, etc.
-        $table->text('descripcion');
-        $table->decimal('arancel_matricula', 8, 2)->default(0.00);
-        $table->decimal('arancel_mensual', 8, 2)->default(0.00);
-        $table->timestamps();
+        Schema::create('carreras', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre', 150)->unique();
+
+            // ✅ Se corrige a foreignId en lugar de string 'nivel'
+            $table->foreignId('nivel_id')->constrained('niveles')->onDelete('cascade');
+            $table->string('modalidad', 100);
+            $table->text('descripcion');
+            $table->text('perfil_profesional')->nullable();
+            $table->integer('duracion_meses')->unsigned();
+            $table->string('imagen')->nullable();
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('carreras');

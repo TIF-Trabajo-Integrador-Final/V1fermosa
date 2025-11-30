@@ -6,22 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('requisitos', function (Blueprint $table) {
-        $table->id();
-        $table->string('titulo');
-        $table->text('detalle'); // Contenido del requisito
-        $table->timestamps();
+            $table->id();
+            $table->string('descripcion', 500);
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('requisitos');
