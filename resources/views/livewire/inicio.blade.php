@@ -65,7 +65,7 @@
 {{-- 2. SOBRE NOSOTROS (COMPLETO + ACORDEÓN + IMÁGENES) --}}
 {{-- ====================================================== --}}
 <section id="sobre-nosotros"
-    class="max-w-6xl mx-auto bg-white/80 backdrop-blur-lg shadow-xl rounded-xl p-10 mb-20
+    class="max-w-3xl mx-auto bg-white/80 backdrop-blur-lg shadow-xl rounded-xl p-10 mb-20
            border-t-[4px] border-[#131567] transition-all hover:bg-white/95 font-montserrat"
     data-aos="fade-up">
 
@@ -76,7 +76,7 @@
 
         {{-- TEXTO IZQUIERDA --}}
         <div data-aos="fade-right">
-            <h2 class="text-4xl font-extrabold text-[#131567] mb-6 pb-3 border-b border-gray-300">
+            <h2 class="text-2xl font-extrabold text-[#131567] mb-6 pb-3 border-b border-gray-300">
                 <i class="fas fa-university mr-3"></i>
                 Sobre Nosotros
             </h2>
@@ -237,14 +237,13 @@
         {{-- CARD ESTILIZADA --}}
         class="bg-white/50 backdrop-blur-lg p-6 rounded-xl shadow-xl border-l-4 border-[#131567]
                hover:scale-[1.02] transition duration-300 flex flex-col hover:bg-white/70
-               min-h-[360px]"
-    >
+               min-h-[360px]">
     <div class="w-16 h-16 bg-[#7CB4EF]/40 rounded-full flex items-center justify-center mx-auto mb-5">
         <i class="fas {{ $c['icon'] }} text-3xl text-[#131567]"></i>
     </div>
 
     <!-- TÍTULO MÁS GRANDE -->
-    <h3 class="text-2xl font-montserrat font-extrabold text-[#131567] mb-4 text-center">
+    <h3 class="text-xl font-montserrat font-extrabold text-[#131567] mb-4 text-center">
         {{ $c['title'] }}
     </h3>
 
@@ -327,107 +326,110 @@
         {{-- ====================================================== --}}
     
       <!-- IMAGEN — SE EXPANDE SEGÚN ESTADO DE LOS DESPLEGABLES -->
-       <section id="directora" class="relative z-10 max-w-6xl mx-auto px-6 mb-16" data-aos="fade-up">
-        <div class="bg-white/85 shadow-xl rounded-xl p-8 md:p-12 border-l-4 border-[#131567] backdrop-blur-sm transition-all hover:bg-white/95">
+         </div>
+            </div>
 
+              <section id="directora" class="relative z-10 max-w-5xl mx-auto px-4 mb-12" data-aos="fade-up">
+    <div class="bg-white/85 shadow-xl rounded-xl p-6 md:p-8 border-l-4 border-[#131567] backdrop-blur-sm transition-all hover:bg-white/95">
 
-    <h2 class="text-3xl md:text-5xl font-montserrat font-bold text-[#131567] mb-10 flex items-center gap-4">
-        <i class="fas fa-user-tie"></i>
-        Mensaje de la Dirección
-    </h2>
+        <!-- TÍTULO (NO MODIFICADO) -->
+        <h2 class="text-2xl md:text-2xl font-montserrat font-bold text-[#131567] mb-6 flex items-center gap-4">
+            <i class="fas fa-user-tie"></i>
+            Mensaje de la Dirección
+        </h2>
 
-   <div 
-        x-data="{ openAcademic: false, openWork: false }"
-        class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start"
-    >
+        <div x-data="{ openAcademic: false, openWork: false }"
+             class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 
-        <!-- IMAGEN CON 3 NIVELES DE ALTURA -->
-        <div 
-            class="overflow-hidden rounded-xl shadow-lg w-full max-w-sm mx-auto transition-all duration-700 ease-out"
-            :class="{
-                'max-h-[420px]': !openAcademic && !openWork,          /* ninguno abierto */
-                'max-h-[600px]': (openAcademic && !openWork) || (!openAcademic && openWork), /* uno abierto */
-                'max-h-[1000px]': openAcademic && openWork             /* ambos abiertos */
-            }"
-        >
-            <img src="{{ asset('images/8.jpeg') }}"
-                 class="w-full h-full object-cover object-top transition-all duration-700 ease-out"
-                 alt="Directora">
+            <!-- IMAGEN MÁS CHICA -->
+            <div 
+                class="overflow-hidden rounded-xl shadow-md w-full max-w-xs mx-auto transition-all duration-700 ease-out"
+                :class="{
+                    'max-h-[280px]': !openAcademic && !openWork,
+                    'max-h-[380px]': (openAcademic && !openWork) || (!openAcademic && openWork),
+                    'max-h-[520px]': openAcademic && openWork
+                }"
+            >
+                <img src="{{ asset('images/8.jpeg') }}"
+                     class="w-full h-full object-cover object-top transition-all duration-700 ease-out"
+                     alt="Directora">
+            </div>
+
+            <!-- COLUMNA DERECHA REDUCIDA -->
+            <div class="space-y-6">
+
+                <!-- TEXTO PRINCIPAL MÁS CHICO -->
+                <p class="italic text-gray-700 leading-relaxed font-montserrat text-base border-l-4 border-blue-200 pl-4 py-3 bg-white/60 rounded-r-xl shadow-sm backdrop-blur-sm">
+                    “Nuestro compromiso es brindar una educación que transforme vidas y construya un futuro mejor para nuestra comunidad. 
+                    Los invitamos a ser parte de este proyecto académico enriquecedor y de excelencia.”
+                </p>
+
+                <!-- ACORDEÓN 1 - MÁS COMPACTO -->
+                <div class="border border-gray-200 rounded-xl shadow-md bg-white text-sm">
+
+                    <button 
+                        @click="openAcademic = !openAcademic"
+                        class="w-full text-left px-4 py-3 
+                               bg-gradient-to-r from-[#3C5CCF] to-[#131567] 
+                               text-white font-montserrat font-semibold 
+                               flex justify-between items-center rounded-t-xl text-sm"
+                    >
+                        Antecedentes Académicos
+                        <i class="fas fa-chevron-down transition-transform duration-300"
+                           :class="{ 'rotate-180': openAcademic }"></i>
+                    </button>
+
+                    <div 
+                        x-show="openAcademic"
+                        x-transition
+                        class="px-4 py-3 text-gray-700 font-montserrat text-sm space-y-2"
+                    >
+                        <ul class="space-y-2">
+                            <li><i class="fas fa-check text-[#131567] mr-2"></i> Lic. en Gestión Educativa – UNF.</li>
+                            <li><i class="fas fa-check text-[#131567] mr-2"></i> Especialista en Gestión Tutorial – UNNE.</li>
+                            <li><i class="fas fa-check text-[#131567] mr-2"></i> Profesora para la Enseñanza Primaria.</li>
+                            <li><i class="fas fa-check text-[#131567] mr-2"></i> Pos título en Tecnología – UNF.</li>
+                            <li><i class="fas fa-check text-[#131567] mr-2"></i> Doctoranda en Educación – UNAH.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ACORDEÓN 2 - MÁS COMPACTO -->
+                <div class="border border-gray-200 rounded-xl shadow-md bg-white text-sm">
+
+                    <button 
+                        @click="openWork = !openWork"
+                        class="w-full text-left px-4 py-3 
+                               bg-gradient-to-r from-[#3C5CCF] to-[#131567] 
+                               text-white font-montserrat font-semibold 
+                               flex justify-between items-center rounded-t-xl text-sm"
+                    >
+                        Experiencia Laboral Empresarial
+                        <i class="fas fa-chevron-down transition-transform duration-300"
+                           :class="{ 'rotate-180': openWork }"></i>
+                    </button>
+
+                    <div 
+                        x-show="openWork"
+                        x-transition
+                        class="px-4 py-3 text-gray-700 font-montserrat text-sm space-y-2"
+                    >
+                        <ul class="space-y-2">
+                            <li><i class="fas fa-briefcase text-[#131567] mr-2"></i> Directora del Instituto Superior Fermosa.</li>
+                            <li><i class="fas fa-briefcase text-[#131567] mr-2"></i> Responsable de la Incubadora del ISF.</li>
+                            <li><i class="fas fa-briefcase text-[#131567] mr-2"></i> Coord. Programas — Ministerio de Trabajo.</li>
+                            <li><i class="fas fa-briefcase text-[#131567] mr-2"></i> Presidenta Mujeres Empresarias.</li>
+                            <li><i class="fas fa-briefcase text-[#131567] mr-2"></i> Presidenta Fundación FOPROC.</li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
 
-        <!-- COLUMNA DERECHA (TEXTO + ACORDEONES) -->
-        <div class="space-y-8">
-
-            <!-- TEXTO PRINCIPAL -->
-            <p class="italic text-gray-700 leading-relaxed font-montserrat text-lg md:text-xl border-l-4 border-blue-200 pl-6 py-4 bg-white/60 rounded-r-xl shadow-sm backdrop-blur-sm">
-                “Nuestro compromiso es brindar una educación que transforme vidas y construya un futuro mejor para nuestra comunidad. 
-                Los invitamos a ser parte de este proyecto académico enriquecedor y de excelencia.”
-            </p>
-
-            <!-- ACORDEÓN 1 -->
-            <div class="border border-gray-200 rounded-xl shadow-md bg-white">
-
-                <button 
-                    @click="openAcademic = !openAcademic"
-                    class="w-full text-left px-6 py-4 
-                           bg-gradient-to-r from-[#3C5CCF] to-[#131567] 
-                           text-white font-montserrat font-semibold 
-                           flex justify-between items-center rounded-t-xl"
-                >
-                    Antecedentes Académicos
-                    <i class="fas fa-chevron-down transition-transform duration-300"
-                       :class="{ 'rotate-180': openAcademic }"></i>
-                </button>
-
-                <div 
-                    x-show="openAcademic"
-                    x-transition
-                    class="px-6 py-5 text-gray-700 font-montserrat text-lg space-y-3"
-                >
-                    <ul class="space-y-3">
-                        <li><i class="fas fa-check text-[#131567] mr-2"></i> Lic. en Gestión Educativa – UNF.</li>
-                        <li><i class="fas fa-check text-[#131567] mr-2"></i> Especialista en Gestión Tutorial – UNNE.</li>
-                        <li><i class="fas fa-check text-[#131567] mr-2"></i> Profesora para la Enseñanza Primaria.</li>
-                        <li><i class="fas fa-check text-[#131567] mr-2"></i> Pos título en Tecnología – UNF.</li>
-                        <li><i class="fas fa-check text-[#131567] mr-2"></i> Doctoranda en Educación – UNAH.</li>
-                    </ul>
-                </div>
-            </div>
-
-                {{-- ACORDEÓN 2 --}}
-                <div class="border border-gray-200 rounded-xl shadow-md bg-white">
-
-                <button 
-                    @click="openWork = !openWork"
-                    class="w-full text-left px-6 py-4 
-                           bg-gradient-to-r from-[#3C5CCF] to-[#131567] 
-                           text-white font-montserrat font-semibold 
-                           flex justify-between items-center rounded-t-xl"
-                >
-                    Experiencia Laboral Empresarial
-                    <i class="fas fa-chevron-down transition-transform duration-300"
-                       :class="{ 'rotate-180': openWork }"></i>
-                </button>
-
-                <div 
-                    x-show="openWork"
-                    x-transition
-                    class="px-6 py-5 text-gray-700 font-montserrat text-lg space-y-3"
-                >
-                    <ul class="space-y-3">
-                        <li><i class="fas fa-briefcase text-[#131567] mr-2"></i> Directora del Instituto Superior Fermosa.</li>
-                        <li><i class="fas fa-briefcase text-[#131567] mr-2"></i> Responsable de la Incubadora del ISF.</li>
-                        <li><i class="fas fa-briefcase text-[#131567] mr-2"></i> Coord. Programas — Ministerio de Trabajo.</li>
-                        <li><i class="fas fa-briefcase text-[#131567] mr-2"></i> Presidenta Mujeres Empresarias.</li>
-                        <li><i class="fas fa-briefcase text-[#131567] mr-2"></i> Presidenta Fundación FOPROC.</li>
-                    </ul>
-                </div>
-            </div>
-
-            </div>
-        </div>
-    </div>
 </section>
+
 
     </div>
 

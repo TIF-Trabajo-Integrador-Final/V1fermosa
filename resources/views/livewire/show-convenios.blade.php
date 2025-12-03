@@ -78,17 +78,15 @@
 
     <div class="flex flex-col md:flex-row gap-8 items-center md:items-center">
 
-        <!-- LOGO → SIEMPRE CENTRADO Y MISMO TAMAÑO -->
-        <!-- LOGO — TAMAÑO UNIFICADO -->
-<div class="w-full md:w-1/3 flex justify-center">
-    <div class="h-52 w-full max-w-xs bg-white rounded-xl p-4 shadow-md 
+   <div class="w-full md:w-1/3 flex justify-center">
+    <div class="h-72 w-full max-w-sm bg-white rounded-xl p-4 shadow-md 
                 overflow-hidden border border-gray-200 group relative">
 
-        <img src="{{ asset('images/' . $convenio['logo']) }}"
-             alt="Logo {{ $convenio['universidad'] }}"
-             class="w-full h-full object-cover rounded-lg 
-                    transition-transform duration-700 ease-out 
-                    group-hover:scale-110">
+        <img src="{{ asset('storage/' . $convenio->logo) }}"
+     alt="Logo {{ $convenio->universidad }}"
+     class="w-full h-full object-cover rounded-lg transform transition duration-700 ease-out group-hover:scale-105">
+
+
     </div>
 </div>
 
@@ -104,11 +102,11 @@
             </h2>
 
             <!-- MAPA GOOGLE -->
-<!-- MAPA (correctamente encapsulado) -->
-<div class="w-full mt-6">
+            <!-- MAPA (correctamente encapsulado) -->
+         <div class="w-full mt-6">
     <iframe 
-        src="{{ $convenio['mapa'] }}"
-        class="w-full h-64 rounded-lg shadow-lg border border-gray-300"
+        src="{{ $convenio->url_mapa }}"
+        class="w-full h-40 rounded-lg shadow-lg border border-gray-300"
         allowfullscreen=""
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade">

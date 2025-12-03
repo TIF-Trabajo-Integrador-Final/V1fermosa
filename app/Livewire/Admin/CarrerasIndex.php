@@ -151,6 +151,8 @@ class CarrerasIndex extends Component
 
         session()->flash('ok', 'Carrera eliminada.');
     }
+    protected $listeners = ['eliminar' => 'eliminar'];
+
 
     public function resetFormulario()
     {

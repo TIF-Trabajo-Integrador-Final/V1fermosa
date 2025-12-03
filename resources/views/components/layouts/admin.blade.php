@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="es">
 
 <head>
@@ -64,10 +64,12 @@
 
         <div class="flex items-center gap-3">
 
-            <!-- Botón Grid de apps -->
-            <button @click="openApps = !openApps" class="text-2xl hover:text-gray-300">▦</button>
+            <!-- Botón Grid de apps (SOLO ESCRITORIO) -->
+            <button @click="openApps = !openApps" class="text-2xl hover:text-gray-300 hidden lg:block">
+                ▦
+            </button>
 
-            <!-- Botón hamburguesa (mobile) -->
+            <!-- Botón hamburguesa (solo móvil) -->
             <button @click="openSidebar = true" class="lg:hidden text-2xl focus:outline-none">
                 ☰
             </button>
@@ -75,18 +77,18 @@
             <h1 class="font-bold text-lg ml-2">Administrador ISF</h1>
         </div>
 
-         <div>
+        <div>
             <span class="text-sm">Bienvenido, <strong>{{ Auth::user()->name }}</strong></span>
         </div>
 
     </nav>
 
-    <!-- MENÚ DESPLEGABLE DE APPS -->
+    <!-- MENÚ DESPLEGABLE DE APPS (solo escritorio) -->
     <div 
         x-show="openApps"
         @click.away="openApps = false"
         x-transition
-        class="absolute left-4 top-16 w-80 bg-white shadow-xl rounded-xl border border-gray-200 p-4 z-50"
+        class="absolute left-4 top-16 w-80 bg-white shadow-xl rounded-xl border border-gray-200 p-4 z-50 hidden lg:block"
     >
         <h2 class="text-sm font-semibold text-gray-600 mb-3">Accesos rápidos</h2>
 
@@ -116,6 +118,22 @@
                 </div>
             </a>
 
+            <a href="{{ route('admin.convenios.index') }}" class="flex items-center gap-3 p-3 rounded hover:bg-gray-100">
+                <span class="text-2xl">🏛️</span>
+                <div>
+                    <div class="font-medium">Convenios</div>
+                    <p class="text-xs text-gray-500">Gestionar</p>
+                </div>
+            </a>
+
+            <a href="{{ route('admin.resenas.index') }}" class="flex items-center gap-3 p-3 rounded hover:bg-gray-100">
+                <span class="text-2xl">📝</span>
+                <div>
+                    <div class="font-medium">Reseñas</div>
+                    <p class="text-xs text-gray-500">Gestionar</p>
+                </div>
+            </a>
+
             <a href="{{ url('/') }}" class="flex items-center gap-3 p-3 rounded hover:bg-gray-100">
                 <span class="text-2xl">🌐</span>
                 <div>
@@ -134,8 +152,7 @@
         </div>
     </div>
 
-
-    <!-- SIDEBAR DESLIZANTE (ESTILO CHATGPT) -->
+    <!-- SIDEBAR MÓVIL -->
     <div
         class="fixed inset-y-0 left-0 z-40 w-64 bg-white text-gray-900 shadow-xl transform -translate-x-full 
                transition-transform duration-300 ease-in-out lg:hidden"
@@ -159,6 +176,16 @@
                 📄 <span>Requisitos</span>
             </a>
 
+            <!-- NUEVO: CONVENIOS -->
+            <a href="{{ route('admin.convenios.index') }}" class="flex items-center gap-3 p-2 rounded hover:bg-gray-100">
+                🏛️ <span>Convenios</span>
+            </a>
+
+            <!-- NUEVO: RESEÑAS -->
+            <a href="{{ route('admin.resenas.index') }}" class="flex items-center gap-3 p-2 rounded hover:bg-gray-100">
+                📝 <span>Reseñas</span>
+            </a>
+
             <a href="{{ url('/') }}" class="flex items-center gap-3 p-2 rounded hover:bg-gray-100">
                 🌐 <span>Ver sitio</span>
             </a>
@@ -173,7 +200,6 @@
         </nav>
     </div>
 
-
     <!-- OVERLAY OSCURECIDO PARA MOBILE -->
     <div 
         class="fixed inset-0 bg-black/50 z-30 lg:hidden"
@@ -181,7 +207,6 @@
         @click="openSidebar = false"
         x-transition.opacity>
     </div>
-
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="flex-1 relative animated-gradient text-white p-6 overflow-hidden">

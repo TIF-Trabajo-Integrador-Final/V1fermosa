@@ -9,12 +9,15 @@ use App\Livewire\Carreras;
 use App\Livewire\Requisitos;
 use App\Livewire\ShowConvenios;
 use App\Livewire\CarreraShow;
+use App\Livewire\Resenas;
 
 
 // ADMIN - Componentes Livewire internos
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\CarrerasIndex;
 use App\Livewire\Admin\RequisitosIndex;
+use App\Livewire\Admin\ConveniosIndex;
+use App\Livewire\Admin\ResenasIndex;
 
 
 
@@ -39,7 +42,6 @@ Route::get('/requisitos', Requisitos::class)->name('requisitos');
 // Convenios
 Route::get('/convenios', ShowConvenios::class)->name('convenios');
 
-use App\Livewire\Resenas;
 
 Route::get('/resenas', Resenas::class)->name('resenas');
 
@@ -73,18 +75,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
     |
     */
 
-    Route::prefix('admin')->name('admin.')->group(function () {
+   Route::prefix('admin')->name('admin.')->group(function () {
 
-        // Carreras
-        Route::get('/carreras', CarrerasIndex::class)->name('carreras.index');
+    // Carreras
+    Route::get('/carreras', CarrerasIndex::class)->name('carreras.index');
 
-        // Requisitos
-        Route::get('/requisitos', RequisitosIndex::class)->name('requisitos.index');
+    // Requisitos
+    Route::get('/requisitos', RequisitosIndex::class)->name('requisitos.index');
+
+    // Convenios
+    Route::get('/convenios', ConveniosIndex::class)->name('convenios.index');
+
+    // Reseñas
+    Route::get('/resenas', ResenasIndex::class)->name('resenas.index');
+});
 
         // Aquí podés agregar módulos futuros:
         // Route::get('/convenios', ConveniosIndex::class)->name('convenios.index');
         // Route::get('/usuarios', UsuariosIndex::class)->name('usuarios.index');
-    });
+   
 
 
     /*

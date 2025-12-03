@@ -16,12 +16,12 @@ class RequisitosIndex extends Component
     public $isFormVisible = false;
 
     /**
-     * Reglas de validación corregidas
+     * Reglas de validación
      */
     protected function rules()
     {
         return [
-            'descripcion' => 'required|string|max:500', // CAMBIO
+            'descripcion' => 'required|string|max:500',
         ];
     }
 
@@ -35,7 +35,7 @@ class RequisitosIndex extends Component
      */
     private function cargarDatos()
     {
-        $this->requisitos = Requisito::orderBy('id', 'desc')->get(); // CAMBIO: ordenado
+        $this->requisitos = Requisito::orderBy('id', 'desc')->get();
     }
 
     public function render()
@@ -51,7 +51,7 @@ class RequisitosIndex extends Component
      */
     public function mostrarFormulario($id = null)
     {
-        $this->resetFormulario(); // CAMBIO
+        $this->resetFormulario();
 
         if ($id) {
             $req = Requisito::find($id);
@@ -72,6 +72,12 @@ class RequisitosIndex extends Component
     {
         $this->validate();
 
+        // CAMBIO: Definimos el mensaje según si existe un ID (Edición) o no (Creación)
+        // Hacemos esto ANTES de resetear el formulario para no perder el ID.
+        $mensaje = $this->requisito_id 
+            ? 'Requisito actualizado correctamente.' 
+            : 'Requisito guardado correctamente.';
+
         $data = [
             'descripcion' => $this->descripcion,
         ];
@@ -82,9 +88,11 @@ class RequisitosIndex extends Component
         );
 
         $this->cargarDatos();
+        
+        // El reset borra el ID, por eso definimos el mensaje arriba
         $this->resetFormulario();
 
-        session()->flash('ok', 'Requisito guardado correctamente.');
+        session()->flash('ok', $mensaje);
     }
 
     /**
@@ -97,7 +105,6 @@ class RequisitosIndex extends Component
         if (!$req) return;
 
         if ($req->carreras->count() > 0) {
-            // CAMBIO: evita romper la BD
             session()->flash('error', 'No es posible eliminar este requisito porque está asignado a una o más carreras.');
             return;
         }
