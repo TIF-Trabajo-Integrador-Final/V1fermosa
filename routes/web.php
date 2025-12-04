@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\PasswordCodeController;
 
 // FRONTEND - Componentes Livewire públicos
 use App\Livewire\Inicio;
@@ -114,5 +115,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 | RUTAS DE AUTENTICACIÓN (Breeze)
 |--------------------------------------------------------------------------
 */
+ 
 
 require __DIR__ . '/auth.php';
