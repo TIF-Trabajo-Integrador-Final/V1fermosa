@@ -7,6 +7,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-tokenizer": "*",
+        "ext-ctype": "*",
+        "ext-fileinfo": "*",
+        "ext-json": "*",
+
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.6"
@@ -68,7 +78,9 @@
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
-        ]
+        ],
+
+        "start": "php artisan serve --host=0.0.0.0 --port=8080"
     },
     "extra": {
         "laravel": {
