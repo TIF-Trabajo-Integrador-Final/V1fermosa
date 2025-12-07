@@ -5,19 +5,22 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        User::create([
-            'name' => 'Administrador de la Pagina',
-            'email' => 'institutosuperiorfermosa@gmail.com',
-            'password' => bcrypt('fermosa2025'),
-            'role' => 'admin',
-        ]);
+        DB::table('users')->updateOrInsert(
+            ['email' => 'institutosuperiorfermosa@gmail.com'],
+            [
+                'name' => 'Administrador de la Pagina',
+                'password' => bcrypt('admin'),
+                'role' => 'admin',
+                'updated_at' => now(),
+                'created_at' => now(),
+            ]
+        );
     }
 }
+
