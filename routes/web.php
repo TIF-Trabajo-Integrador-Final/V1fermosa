@@ -5,15 +5,31 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\PasswordCodeController;
 
 
-Route::get('/seed-test', function () {
-
-    try {
-        \Artisan::call('db:seed --force');
-        dd(\Artisan::output());
-    } catch (\Throwable $e) {
-        dd($e);
-    }
+Route::get('/seed-user', function () {
+    \Artisan::call('db:seed', ['--class' => 'UserSeeder', '--force' => true]);
+    return "<pre>" . \Artisan::output() . "</pre>";
 });
+
+Route::get('/seed-niveles', function () {
+    \Artisan::call('db:seed', ['--class' => 'NivelesSeeder', '--force' => true]);
+    return "<pre>" . \Artisan::output() . "</pre>";
+});
+
+Route::get('/seed-requisitos', function () {
+    \Artisan::call('db:seed', ['--class' => 'RequisitosSeeder', '--force' => true]);
+    return "<pre>" . \Artisan::output() . "</pre>";
+});
+
+Route::get('/seed-carreras', function () {
+    \Artisan::call('db:seed', ['--class' => 'CarrerasSeeder', '--force' => true]);
+    return "<pre>" . \Artisan::output() . "</pre>";
+});
+
+Route::get('/seed-carreras-requisitos', function () {
+    \Artisan::call('db:seed', ['--class' => 'CarrerasRequisitoSeeder', '--force' => true]);
+    return "<pre>" . \Artisan::output() . "</pre>";
+});
+
 
 
 
