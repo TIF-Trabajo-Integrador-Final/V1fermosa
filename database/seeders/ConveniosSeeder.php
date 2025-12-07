@@ -2,60 +2,52 @@
 
 namespace Database\Seeders;
 
-use App\Models\Convenio;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ConveniosSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the convenios table.
-     */
     public function run(): void
     {
-        // Clear existing data (safe for production if using truncate)
-        // Convenio::truncate();
-
         $convenios = [
             [
                 'universidad' => 'Universidad Nacional del Chaco Austral',
-                'logo' => 'convenios/lCOlUMJDKaCkjqW5MK7JB6G6vTPigx2uCLcCiCG6...',
-                'url_mapa' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3...',
+                'logo' => 'images/convenios/uncaus.jpeg',
+                'url_mapa' => 'https://www.google.com/maps/embed?...',
             ],
             [
                 'universidad' => 'Universidad Nacional de Villa María de Córdoba',
-                'logo' => 'convenios/I6VfMMqG6qdoGZWyu1PJR7L0kHpk49cCSGuIXZuB...',
-                'url_mapa' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3...',
+                'logo' => 'images/convenios/villamaria.jpeg',
+                'url_mapa' => 'https://www.google.com/maps/embed?...',
             ],
             [
                 'universidad' => 'Universidad Nacional Fasta',
-                'logo' => 'convenios/UTugSYjWfNgu3EyjkmKgx5j1bWjrh35tQoDaOie...',
-                'url_mapa' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3...',
+                'logo' => 'images/convenios/fasta.jpeg',
+                'url_mapa' => 'https://www.google.com/maps/embed?...',
             ],
             [
                 'universidad' => 'Universidad Tecnología Nacional F.R. Resistencia',
-                'logo' => 'convenios/I88TlYSUkjoo64y8Fn2EwFcyoTSH4I8gvXMQdX7B...',
-                'url_mapa' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3...',
+                'logo' => 'images/convenios/utn.jpeg',
+                'url_mapa' => 'https://www.google.com/maps/embed?...',
             ],
             [
                 'universidad' => 'Instituto Superior Oscar A. Albertazzi',
-                'logo' => 'convenios/6OAdHtzRMvGMXJ0eXxNWcP83ZXnIZvsH63jUkr9b...',
-                'url_mapa' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3...',
+                'logo' => 'images/convenios/albertazzi.jpeg',
+                'url_mapa' => 'https://www.google.com/maps/embed?...',
             ],
         ];
 
-        foreach ($convenios as $convenio) {
-            // Only create if doesn't exist (avoid duplicates on reseed)
-            Convenio::firstOrCreate(
-                ['universidad' => $convenio['universidad']],
+        foreach ($convenios as $conv) {
+            DB::table('convenios')->updateOrInsert(
+                ['universidad' => $conv['universidad']],
                 [
-                    'logo' => $convenio['logo'],
-                    'url_mapa' => $convenio['url_mapa'],
+                    'logo' => $conv['logo'],
+                    'url_mapa' => $conv['url_mapa'],
+                    'updated_at' => now(),
                 ]
             );
         }
+
+        $this->command->info('✔ Convenios cargados o actualizados correctamente.');
     }
 }
-
