@@ -15,6 +15,9 @@ class ConveniosSeeder extends Seeder
      */
     public function run(): void
     {
+        // Clear existing data (safe for production if using truncate)
+        // Convenio::truncate();
+
         $convenios = [
             [
                 'universidad' => 'Universidad Nacional del Chaco Austral',
@@ -44,7 +47,15 @@ class ConveniosSeeder extends Seeder
         ];
 
         foreach ($convenios as $convenio) {
-            Convenio::create($convenio);
+            // Only create if doesn't exist (avoid duplicates on reseed)
+            Convenio::firstOrCreate(
+                ['universidad' => $convenio['universidad']],
+                [
+                    'logo' => $convenio['logo'],
+                    'url_mapa' => $convenio['url_mapa'],
+                ]
+            );
         }
     }
 }
+
