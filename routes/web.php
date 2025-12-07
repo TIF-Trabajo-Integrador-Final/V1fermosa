@@ -9,6 +9,7 @@ use App\Http\Controllers\DebugController;
 // DEBUG ROUTES (temporary - secured by token)
 Route::get('/debug/convenios', [DebugController::class, 'convenios']);
 Route::get('/debug/health', [DebugController::class, 'health']);
+Route::get('/debug/seed-convenios', [DebugController::class, 'seedConvenios']);
 
 Route::get('/seed-user', function () {
     \Artisan::call('db:seed', ['--class' => 'UserSeeder', '--force' => true]);

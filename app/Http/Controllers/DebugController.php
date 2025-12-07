@@ -68,4 +68,41 @@ class DebugController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Manually execute ConveniosSeeder and return results.
+     * 
+     * Usage: GET /debug/seed-convenios?token=YOUR_SECRET_TOKEN
+     */
+    public function seedConvenios(): Response
+    {
+        $token = request('token');
+        $expectedToken = env('DEBUG_TOKEN', 'test123');
+        
+        if ($token !== $expectedToken) {
+            return response('Unauthorized', 401);
+        }
+
+        try {
+            // Execute the seeder
+            \Artisan::call('db:seed', ['--class' => 'ConveniosSeeder', '--force' => true]);
+            
+            $output = \Artisan::output();
+            $count = Convenio::count();
+
+            return response([
+                'status' => 'success',
+                'message' => 'ConveniosSeeder executed',
+                'total_convenios_after_seed' => $count,
+                'artisan_output' => $output,
+                'convenios' => Convenio::all(),
+            ], 200);
+        } catch (\Exception $e) {
+            return response([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'trace' => $e->getTrace(),
+            ], 500);
+        }
+    }
 }
