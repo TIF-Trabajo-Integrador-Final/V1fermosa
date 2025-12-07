@@ -3,29 +3,31 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use App\Models\Carrera;
 use App\Models\Requisito;
-use App\Models\Nivel;
 
-class CarreraRequisitoSeeder extends Seeder
+class CarrerasRequisitoSeeder extends Seeder
 {
-  public function run(): void
-  {
-    $nivel = Nivel::firstOrCreate(['nombre' => 'Licenciatura']);
+    public function run(): void
+    {
+        $carreras = Carrera::all();
+        $requisitos = Requisito::pluck('id')->toArray();
 
-    $carrera = Carrera::firstOrCreate([
-      'nombre' => 'Licenciatura en Informática',
-      'nivel_id' => $nivel->id,
-      'descripcion' => 'Carrera orientada a la formación profesional en el ámbito de la informática y los sistemas.',
-      'perfil_profesional' => 'El egresado podrá analizar, diseñar y administrar sistemas informáticos complejos.',
-      'duracion_meses' => 48,
-      'modalidad' => 'Presencial',
-      'imagen' => null,
-    ]);
+        if ($carreras->isEmpty() || empty($requisitos)) {
+            $this->command->error('❌ No hay carreras o requisitos cargados.');
+            return;
+        }
 
-    $requisitos = Requisito::inRandomOrder()->take(4)->pluck('id');
-    $carrera->requisitos()->sync($requisitos);
+        foreach ($carreras as $carrera) {
+            foreach ($requisitos as $req) {
+                DB::table('carrera_requisito')->updateOrInsert([
+                    'carrera_id' => $carrera->id,
+                    'requisito_id' => $req
+                ]);
+            }
+        }
 
-    $this->command->info('✅ Carrera de ejemplo creada con requisitos asociados.');
-  }
+        $this->command->info('✅ Relaciones carrera–requisitos cargadas correctamente.');
+    }
 }
