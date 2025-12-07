@@ -5,6 +5,19 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\PasswordCodeController;
 use App\Http\Controllers\DebugController;
 
+// 🔧 RUTA PARA EJECUTAR EL SEEDER DE CONVENIOS
+Route::get('/seed-convenios', function () {
+    try {
+        \Artisan::call('db:seed', [
+            '--class' => 'ConveniosSeeder',
+            '--force' => true
+        ]);
+
+        return "<pre>" . \Artisan::output() . "</pre>";
+    } catch (\Exception $e) {
+        return "<pre>❌ ERROR: " . $e->getMessage() . "</pre>";
+    }
+});
 
 // DEBUG ROUTES (temporary - secured by token)
 Route::get('/debug/convenios', [DebugController::class, 'convenios']);
