@@ -3,7 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\PasswordCodeController;
+use App\Http\Controllers\DebugController;
 
+
+// DEBUG ROUTES (temporary - secured by token)
+Route::get('/debug/convenios', [DebugController::class, 'convenios']);
+Route::get('/debug/health', [DebugController::class, 'health']);
 
 Route::get('/seed-user', function () {
     \Artisan::call('db:seed', ['--class' => 'UserSeeder', '--force' => true]);
