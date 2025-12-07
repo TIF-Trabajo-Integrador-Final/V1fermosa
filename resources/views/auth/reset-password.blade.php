@@ -1,4 +1,5 @@
 <x-layouts.app title="Restablecer Contraseña">
+    @php if (!isset($request)) $request = request(); @endphp
     <div class="min-h-screen flex items-center justify-center px-4 font-montserrat relative">
 
         <div class="relative w-full max-w-md px-6 py-8 bg-[#cbd2e6]/70 backdrop-blur-xl
