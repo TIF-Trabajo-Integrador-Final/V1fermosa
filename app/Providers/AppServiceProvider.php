@@ -21,6 +21,11 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register storage_url helper with Blade
         $this->registerStorageUrlHelper();
+        
+        if (app()->environment('production')) {
+        URL::forceScheme('https'); // ✅ fuerza HTTPS en todas las rutas
+    }
+
     }
 
     /**
