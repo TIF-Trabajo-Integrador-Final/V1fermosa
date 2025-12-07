@@ -141,6 +141,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| RUTAS DE IMÁGENES DINÁMICAS (para producción en Railway)
+|--------------------------------------------------------------------------
+*/
+Route::get('/storage/{path}', function ($path) {
+    $storagePath = storage_path('app/public/' . $path);
+    
+    if (!file_exists($storagePath)) {
+        abort(404, 'File not found');
+    }
+    
+    $mimeType = mime_content_type($storagePath);
+    return response()->file($storagePath, ['Content-Type' => $mimeType]);
+})->where('path', '.*')->name('storage.file');
+
+/*
+|--------------------------------------------------------------------------
 | RUTAS DE AUTENTICACIÓN (Breeze)
 |--------------------------------------------------------------------------
 */
