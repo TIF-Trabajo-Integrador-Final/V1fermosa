@@ -1,29 +1,53 @@
+# -------- ARCHIVOS DE SISTEMA --------
 *.log
 .DS_Store
+Thumbs.db
+
+# -------- ENTORNOS Y ARCHIVOS SENSIBLES --------
 .env
 .env.backup
 .env.production
-.phpactor.json
-.phpunit.result.cache
-/.fleet
-/.idea
-/.nova
-/.phpunit.cache
-/.vscode
-/.zed
 /auth.json
-/node_modules
-/public/build
-/public/hot
-/public/storage
+
+# -------- DIRECTORIOS A IGNORAR --------
+/vendor/
+/node_modules/
+
+# -------- LARAVEL --------
 /storage/*.key
 /storage/pail
-/vendor
+/storage/logs/
+/storage/framework/sessions/
+/storage/framework/views/
+/storage/framework/cache/
+
+# No ignoramos PUBLIC ENTERO (DEBES subir imágenes, css, assets, etc.)
+# Solo ignoramos archivos generados automáticamente:
+# public/build  <-- LO ELIMINAMOS PARA PERMITIR SUBIR EL BUILD
+
+public/hot/
+public/storage/     # symlink, no debe subirse
+
+# Mantenemos VISIBLE todo lo demás (se suben correctamente):
+# public/images/
+# public/storage_backup_20251206/
+# public/carreras/
+# public/convenios/
+
+
+# -------- IDEs / Editors --------
+/.idea/
+/.fleet/
+/.vscode/
+/.phpunit.cache
+/.phpactor.json
+/.nova/
+/.zed/
+
+# -------- HERRAMIENTAS --------
+.phpunit.result.cache
+
+# -------- HOMESTEAD --------
 Homestead.json
 Homestead.yaml
-Thumbs.db
-vendor/
-node_modules/
-.env
-public/build/
-storage/logs/
+
