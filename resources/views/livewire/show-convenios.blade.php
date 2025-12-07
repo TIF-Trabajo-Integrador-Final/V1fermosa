@@ -76,9 +76,14 @@
                             <div class="w-full md:w-1/3 flex justify-center">
                                 <div class="h-72 w-full max-w-sm bg-white rounded-xl p-4 shadow-md 
                                             overflow-hidden border border-gray-200 group relative">
-                                    @php
-                                        $logoUrl = $convenio->logo ? Storage::url($convenio->logo) : null;
-                                    @endphp
+                                        @php
+                                                $logoUrl = $convenio->logo ? Storage::url($convenio->logo) : null;
+                                            @endphp
+
+                                    @if($logoUrl)
+                                        <img src="{{ $logoUrl }}">
+                                @endif
+
 
                                     @if($logoUrl)
                                         <img src="{{ $logoUrl }}"
