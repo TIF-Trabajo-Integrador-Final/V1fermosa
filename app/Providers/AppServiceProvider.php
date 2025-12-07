@@ -1,8 +1,11 @@
-<?php
+<?php 
 
 namespace App\Providers;
+
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Artisan;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
          * Requiere en .env (producción):
          *  - APP_ENV=production
          *  - APP_URL=https://v1fermosa-production-d8f8.up.railway.app
-         *  - TRUSTED_PROXIES=0.0.0.0/0  (o configurar TrustProxies con '*' )
+         *  - TRUSTED_PROXIES=0.0.0.0/0
          *  - SESSION_SECURE_COOKIE=true
          *  - FILESYSTEM_DISK=public
          *  - ASSET_URL=https://v1fermosa-production-d8f8.up.railway.app (opcional)
@@ -35,7 +38,36 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        // Nota: Evitamos registrar helpers globales aquí.
-        // Usar directamente \Illuminate\Support\Facades\Storage::url($path) en las vistas.
+        /**
+         * ================================================================
+         *  🔒 PREVENIR DUPLICACIÓN DE IMÁGENES EN LOCAL (Windows)
+         * ================================================================
+         *
+         * Evita ejecutar `php artisan storage:link` cuando:
+         *  - el enlace simbólico YA existe correctamente
+         *  - o cuando existe una carpeta física generada por Git/Windows
+         *
+         * Con esto NO se vuelven a duplicar imágenes en:
+         *   public/storage/carreras
+         *   public/storage/convenios
+         *
+         * Railway (Linux) sigue funcionando perfecto.
+         */
+        
+        $publicStorage = public_path('storage');
+
+        // Si NO es un symlink, decidir si crearlo o no
+        if (!is_link($publicStorage)) {
+            
+            // Si NO existe la carpeta → crear el symlink correctamente
+            if (!File::exists($publicStorage)) {
+                Artisan::call('storage:link');
+            }
+
+            // Si existe como carpeta física → NO hacer nada.
+            // Esto evita la duplicación infinita de archivos en Windows.
+        }
+
+        // Fin de verificación de storage:link
     }
 }

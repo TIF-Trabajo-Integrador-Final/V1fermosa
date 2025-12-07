@@ -26,7 +26,7 @@ class CarrerasSeeder extends Seeder
                 'descripcion' => 'Carrera con una duración de 3 años con Título Nacional.',
                 'perfil_profesional' => 'Será un profesional con conocimientos técnicos, administrativos y de gestión.',
                 'duracion_meses' => 36,
-                'imagen' => 'carreras/XFFU9bh53ATpLXpSzJLbnaSmIBkuu1xgksjiHpfo.jpeg',
+                'imagen' => 'carreras/1JDz39KALzCPMcR4NKv2mWF2e0ZhfmNFlCyKc1Vy.jpg',
             ],
             [
                 'nombre' => 'Tecnicatura Superior en Gestión Integral de Negocios',

@@ -21,16 +21,20 @@
 
                         {{-- Imagen robusta con verificación y fallback --}}
                         @php
-                            // En BD guardás: 'carreras/archivo.jpeg' (correcto para disk 'public')
+                            // En BD guardás: 'carreras/<archivo>.jpeg' (correcto para disk 'public')
                             $path   = $carrera->imagen ?? null;
-                            $disk   = config('filesystems.default'); // 'public' en tu .env de Railway
+                            $disk   = config('filesystems.default'); // 'public' en producción (Railway)
                             $exists = $path && Storage::disk($disk)->exists($path);
-                            // Si no existe, usamos un placeholder en public/images/placeholder-carrera.jpg
-                            $imgUrl = $exists ? Storage::url($path) : asset('images/placeholder-carrera.jpg');
+
+                            // Si existe => Storage::url(...) -> /storage/carreras/<archivo>
+                            // Si no, muestra un placeholder en public/images/placeholder-carrera.jpg
+                            $imgUrl = $exists
+                                ? Storage::url($path)
+                                : asset('images/placeholder-carrera.jpg');
                         @endphp
 
                         <div class="relative overflow-hidden rounded-xl shadow-lg w-full h-64 bg-white/40 backdrop-blur-md group">
-                            {{ $imgUrl }}nombre ?? 'Carrera' }}"
+                            {{ $imgUrl }}alt="{{ $carrera->nombre ?? 'Carrera' }}"
                                  class="w-full h-64 object-cover object-top transition-transform duration-700 ease-out group-hover:scale-110"
                                  loading="lazy">
                         </div>
@@ -48,9 +52,9 @@
                             {{ Str::limit($desc, 120) }}
                         </p>
 
-                        {{-- Botón a detalle (solo si la ruta existe) --}}
+                        {{-- Botón a detalle (usa tu ruta definida en web.php) --}}
                         @if(Route::has('carrera.show'))
-                            {{ route(id) }}"
+                            {{ route('carrera.show', $carrera->id) }}"
                                class="inline-block px-4 py-2 border border-[#131567] text-[#131567] font-semibold rounded-lg hover:bg-[#131567] hover:text-white transition-colors">
                                 Conocer más
                             </a>
@@ -66,7 +70,7 @@
         </div>
     </div>
 
-    {{-- Estilos específicos del componente (NO globales, no afectan íconos) --}}
+    {{-- Estilos específicos del componente (no globales, no afectan íconos del header) --}}
     <style>
         .card-container { perspective: 1200px; }
         .card-inner {
