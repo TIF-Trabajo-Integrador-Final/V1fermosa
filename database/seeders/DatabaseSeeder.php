@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         RequisitosSeeder::class,
         CarrerasSeeder::class,
         CarrerasRequisitoSeeder::class, // si necesitas asociar carrera–requisito
+        ConveniosSeeder::class,
     ]);
 }
 
