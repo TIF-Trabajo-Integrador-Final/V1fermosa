@@ -19,13 +19,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Macro para obtener URL de storage con soporte para producción
+        // Register storage_url helper with Blade
+        $this->registerStorageUrlHelper();
+    }
+
+    /**
+     * Register the storage_url helper function
+     */
+    private function registerStorageUrlHelper(): void
+    {
         if (!function_exists('storage_url')) {
-            function storage_url($path) {
-                if (config('app.env') === 'production') {
-                    return \Illuminate\Support\Facades\Storage::url($path);
-                }
-                return asset('storage/' . $path);
+            function storage_url($path)
+            {
+                return \App\Helpers\StorageHelper::url($path);
             }
         }
     }
