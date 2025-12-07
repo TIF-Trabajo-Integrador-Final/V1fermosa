@@ -72,17 +72,10 @@ class DebugController extends Controller
     /**
      * Manually execute ConveniosSeeder and return results.
      * 
-     * Usage: GET /debug/seed-convenios?token=YOUR_SECRET_TOKEN
+     * Usage: GET /debug/seed-convenios
      */
     public function seedConvenios(): Response
     {
-        $token = request('token');
-        $expectedToken = env('DEBUG_TOKEN', 'test123');
-        
-        if ($token !== $expectedToken) {
-            return response('Unauthorized', 401);
-        }
-
         try {
             // Execute the seeder
             \Artisan::call('db:seed', ['--class' => 'ConveniosSeeder', '--force' => true]);
