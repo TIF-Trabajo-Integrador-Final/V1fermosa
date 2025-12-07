@@ -50,7 +50,7 @@
                     <!-- LOGO -->
                     <div class="flex justify-center items-center">
                         @if ($convenio->logo)
-                            <img src="{{ asset('storage/' . $convenio->logo) }}"
+                            <img src="{{ storage_url($convenio->logo) }}"
                                 class="h-14 w-14 rounded object-cover shadow"
                                 alt="{{ $convenio->universidad }}"
                                 onerror="this.style.display='none'" />
@@ -101,7 +101,7 @@
 
                     <!-- Logo -->
                     @if ($convenio->logo)
-                        <img src="{{ asset('storage/' . $convenio->logo) }}"
+                        <img src="{{ storage_url($convenio->logo) }}"
                             class="w-full max-w-[200px] mx-auto h-32 object-cover rounded shadow mb-3">
                     @endif
 
@@ -175,7 +175,7 @@
                                             class="h-32 w-32 rounded object-cover border-2 border-green-600">
                                         <p class="text-xs text-green-600 mt-2">Previsualización</p>
                                     @elseif ($oldImagen)
-                                        <img src="{{ asset('storage/' . $oldImagen) }}"
+                                        <img src="{{ storage_url($oldImagen) }}"
                                             class="h-32 w-32 rounded object-cover border-2 border-blue-600">
                                         <p class="text-xs text-blue-600 mt-2">Imagen actual</p>
                                     @else

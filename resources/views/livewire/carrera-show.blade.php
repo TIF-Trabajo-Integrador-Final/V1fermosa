@@ -32,7 +32,7 @@
                     <div class="relative overflow-hidden rounded-xl shadow-lg 
                                 w-full h-64 bg-white/40 backdrop-blur-md group">
 
-                        <img src="{{ asset('storage/' . $carrera->imagen) }}"
+                        <img src="{{ storage_url($carrera->imagen) }}"
                             alt="{{ $carrera->nombre }}"
                             class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
                     </div>

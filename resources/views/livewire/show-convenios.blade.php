@@ -82,7 +82,7 @@
     <div class="h-72 w-full max-w-sm bg-white rounded-xl p-4 shadow-md 
                 overflow-hidden border border-gray-200 group relative">
 
-        <img src="{{ asset('storage/' . $convenio->logo) }}"
+        <img src="{{ storage_url($convenio->logo) }}"
      alt="Logo {{ $convenio->universidad }}"
      class="w-full h-full object-cover rounded-lg transform transition duration-700 ease-out group-hover:scale-105">
 

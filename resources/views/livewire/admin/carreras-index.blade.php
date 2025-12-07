@@ -51,7 +51,7 @@
                     <!-- IMAGEN -->
                     <div class="flex justify-center items-center">
                         @if ($carrera->imagen)
-                            <img src="{{ asset('storage/' . $carrera->imagen) }}"
+                            <img src="{{ storage_url($carrera->imagen) }}"
                                 class="h-14 w-14 rounded object-cover shadow"
                                 alt="{{ $carrera->nombre }}"
                                 onerror="this.style.display='none'" />
@@ -129,7 +129,7 @@
                     <h3 class="text-lg font-bold text-blue-900 mb-2">{{ $carrera->nombre }}</h3>
 
                     @if ($carrera->imagen)
-                        <img src="{{ asset('storage/' . $carrera->imagen) }}"
+                        <img src="{{ storage_url($carrera->imagen) }}"
                             class="w-full h-40 object-cover rounded-lg shadow mb-3">
                     @endif
 
@@ -267,7 +267,7 @@
                                             <p class="text-xs text-green-600 mt-2">Previsualización</p>
 
                                         @elseif ($oldImagen)
-                                            <img src="{{ asset('storage/' . $oldImagen) }}"
+                                            <img src="{{ storage_url($oldImagen) }}"
                                                 class="h-32 w-32 rounded object-cover border-2 border-blue-600">
                                             <p class="text-xs text-blue-600 mt-2">Imagen actual</p>
 
