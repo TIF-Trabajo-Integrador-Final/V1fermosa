@@ -47,24 +47,26 @@ class DebugController extends Controller
      */
     public function health(): Response
     {
-        $token = request('token');
-        $expectedToken = env('DEBUG_TOKEN', 'test123');
-        
-        if ($token !== $expectedToken) {
-            return response('Unauthorized', 401);
-        }
-
         try {
             \DB::connection()->getPdo();
             return response([
                 'status' => 'success',
                 'message' => 'Database connection OK',
                 'env' => env('APP_ENV'),
+                'db_host' => env('DB_HOST'),
+                'db_database' => env('DB_DATABASE'),
+                'db_username' => env('DB_USERNAME'),
+                'railway_private_domain' => env('RAILWAY_PRIVATE_DOMAIN'),
+                'database_url' => env('DATABASE_URL'),
             ], 200);
         } catch (\Exception $e) {
             return response([
                 'status' => 'error',
                 'message' => $e->getMessage(),
+                'db_host' => env('DB_HOST'),
+                'db_database' => env('DB_DATABASE'),
+                'railway_private_domain' => env('RAILWAY_PRIVATE_DOMAIN'),
+                'database_url' => env('DATABASE_URL'),
             ], 500);
         }
     }
