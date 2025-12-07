@@ -12,6 +12,17 @@ Route::get('/run-migrations', function () {
     return "✔ Migraciones y seeds ejecutados en producción.";
 });
 
+// 🔧 RUTA TEMPORAL PARA VER ERRORES REALES DEL SEEDER
+Route::get('/seed-test', function () { 
+    try {
+        \Artisan::call('db:seed --force');
+        return nl2br(\Artisan::output());
+    } catch (\Exception $e) {
+        return $e->getMessage();
+    }
+});
+
+
 
 // FRONTEND - Componentes Livewire públicos
 use App\Livewire\Inicio;
