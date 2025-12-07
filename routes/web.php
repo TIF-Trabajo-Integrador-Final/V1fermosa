@@ -4,6 +4,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\PasswordCodeController;
 
+
+// 🔧 RUTA TEMPORAL PARA EJECUTAR MIGRACIONES EN RAILWAY
+Route::get('/run-migrations', function () {
+    \Artisan::call('migrate --force');
+    \Artisan::call('db:seed --force');
+    return "✔ Migraciones y seeds ejecutados en producción.";
+});
+
+
 // FRONTEND - Componentes Livewire públicos
 use App\Livewire\Inicio;
 use App\Livewire\Carreras;
@@ -116,5 +125,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 |--------------------------------------------------------------------------
 */
  
+
 
 require __DIR__ . '/auth.php';
