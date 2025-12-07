@@ -5,20 +5,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\PasswordCodeController;
 
 
-// 🔧 RUTA TEMPORAL PARA EJECUTAR MIGRACIONES EN RAILWAY
-Route::get('/run-migrations', function () {
-    \Artisan::call('migrate --force');
-    \Artisan::call('db:seed --force');
-    return "✔ Migraciones y seeds ejecutados en producción.";
-});
+Route::get('/seed-test', function () {
 
-// 🔧 RUTA TEMPORAL PARA VER ERRORES REALES DEL SEEDER
-Route::get('/seed-test', function () { 
     try {
         \Artisan::call('db:seed --force');
-        return nl2br(\Artisan::output());
-    } catch (\Exception $e) {
-        return $e->getMessage();
+        dd(\Artisan::output());
+    } catch (\Throwable $e) {
+        dd($e);
     }
 });
 
