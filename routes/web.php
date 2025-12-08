@@ -19,7 +19,7 @@ Route::get('/seed-convenios', function () {
     }
 });
 
-// DEBUG ROUTES (temporary - secured by token)
+// DEBUG ROUTES
 Route::get('/debug/convenios', [DebugController::class, 'convenios']);
 Route::get('/debug/health', [DebugController::class, 'health']);
 Route::get('/debug/seed-convenios', [DebugController::class, 'seedConvenios']);
@@ -50,8 +50,6 @@ Route::get('/seed-carreras-requisitos', function () {
 });
 
 
-
-
 // FRONTEND - Componentes Livewire públicos
 use App\Livewire\Inicio;
 use App\Livewire\Carreras;
@@ -59,7 +57,6 @@ use App\Livewire\Requisitos;
 use App\Livewire\ShowConvenios;
 use App\Livewire\CarreraShow;
 use App\Livewire\Resenas;
-
 
 // ADMIN - Componentes Livewire internos
 use App\Livewire\Admin\Dashboard;
@@ -69,117 +66,77 @@ use App\Livewire\Admin\ConveniosIndex;
 use App\Livewire\Admin\ResenasIndex;
 
 
-
 /*
 |--------------------------------------------------------------------------
-| RUTAS PÚBLICAS DEL FRONTEND
+| RUTAS PÚBLICAS
 |--------------------------------------------------------------------------
-|
-| Aquí van las rutas que cualquier visitante puede acceder.
-|
 */
 
 Route::get('/', Inicio::class)->name('inicio');
-
-// Ejemplo: si tuvieras rutas públicas para carreras:
 Route::get('/carreras', Carreras::class)->name('carreras');
 Route::get('/carrera/{id}', CarreraShow::class)->name('carrera.show');
-
-// Ejemplo: requisitos públicos (si corresponde)
 Route::get('/requisitos', Requisitos::class)->name('requisitos');
-
-// Convenios
 Route::get('/convenios', ShowConvenios::class)->name('convenios');
-
-
 Route::get('/resenas', Resenas::class)->name('resenas');
-
-// ===============================
-
 
 
 /*
 |--------------------------------------------------------------------------
 | RUTAS PROTEGIDAS (solo usuarios autenticados)
 |--------------------------------------------------------------------------
-|
-| Se aplican los middlewares "auth" y "verified".
-| CAMBIO: estructurado correctamente para garantizar seguridad.
-|
 */
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Dashboard general
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
-    /*
-    |--------------------------------------------------------------------------
-    | ADMINISTRACIÓN
-    |--------------------------------------------------------------------------
-    |
-    | CAMBIO IMPORTANTE:
-    | Se agrupa todo el panel administrativo bajo prefix "admin"
-    | y se agrega name("admin.") para mejor organización.
-    |
-    */
+    Route::prefix('admin')->name('admin.')->group(function () {
 
-   Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/carreras', CarrerasIndex::class)->name('carreras.index');
+        Route::get('/requisitos', RequisitosIndex::class)->name('requisitos.index');
+        Route::get('/convenios', ConveniosIndex::class)->name('convenios.index');
+        Route::get('/resenas', ResenasIndex::class)->name('resenas.index');
 
-    // Carreras
-    Route::get('/carreras', CarrerasIndex::class)->name('carreras.index');
+    });
 
-    // Requisitos
-    Route::get('/requisitos', RequisitosIndex::class)->name('requisitos.index');
-
-    // Convenios
-    Route::get('/convenios', ConveniosIndex::class)->name('convenios.index');
-
-    // Reseñas
-    Route::get('/resenas', ResenasIndex::class)->name('resenas.index');
-});
-
-        // Aquí podés agregar módulos futuros:
-        // Route::get('/convenios', ConveniosIndex::class)->name('convenios.index');
-        // Route::get('/usuarios', UsuariosIndex::class)->name('usuarios.index');
-   
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | PERFIL (Laravel Breeze)
-    |--------------------------------------------------------------------------
-    */
-
+    // Laravel Breeze Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 
-
 /*
 |--------------------------------------------------------------------------
-| RUTAS DE IMÁGENES DINÁMICAS (para producción en Railway)
+| SERVIR IMÁGENES DESDE /public/images SIN TOCAR SESSION NI AUTH
 |--------------------------------------------------------------------------
+|
+| Esta ruta permite que Railway entregue correctamente:
+|   /images/carreras/archivo.jpg
+|   /images/convenios/archivo.jpg
+|
+| SIN interferencias de session, cookie, ni middleware.
+| SOLUCIONA el problema de 404/401 al cargar imágenes.
+|
 */
-Route::get('/storage/{path}', function ($path) {
-    $storagePath = storage_path('app/public/' . $path);
-    
-    if (!file_exists($storagePath)) {
-        abort(404, 'File not found');
+
+Route::get('/images/{folder}/{filename}', function ($folder, $filename) {
+
+    $path = public_path("images/$folder/$filename");
+
+    if (!file_exists($path)) {
+        abort(404);
     }
-    
-    $mimeType = mime_content_type($storagePath);
-    return response()->file($storagePath, ['Content-Type' => $mimeType]);
-})->where('path', '.*')->name('storage.file');
+
+    return response()->file($path);
+
+})->where(['folder' => '.*', 'filename' => '.*'])
+  ->name('images.public');
+
 
 /*
 |--------------------------------------------------------------------------
-| RUTAS DE AUTENTICACIÓN (Breeze)
+| Rutas de autenticación de Breeze
 |--------------------------------------------------------------------------
 */
- 
-
-
 require __DIR__ . '/auth.php';
