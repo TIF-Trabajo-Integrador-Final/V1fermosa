@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Livewire\Admin;
 
@@ -16,95 +16,84 @@ class ConveniosIndex extends Component
     public $convenio_id;
     public $universidad;
     public $url_mapa;
-    public $imagen;       // Nueva imagen
-    public $oldImagen;    // Imagen existente en BD
+    public $imagen;
+    public $oldImagen;
 
     public function mostrarFormulario($id = null)
     {
-        $this->reset(['convenio_id', 'universidad', 'url_mapa', 'imagen', 'oldImagen']);
+        $this->reset([
+            'convenio_id',
+            'universidad',
+            'url_mapa',
+            'imagen',
+            'oldImagen'
+        ]);
+
         $this->resetValidation();
 
         if ($id) {
-            $convenio = Convenio::findOrFail($id);
+            $c = Convenio::findOrFail($id);
 
-            $this->convenio_id = $convenio->id;
-            $this->universidad = $convenio->universidad;
-            $this->url_mapa    = $convenio->url_mapa;
-            $this->oldImagen   = $convenio->logo;
+            $this->convenio_id = $c->id;
+            $this->universidad = $c->universidad;
+            $this->url_mapa = $c->url_mapa;
+            $this->oldImagen = $c->logo;
         }
 
         $this->isFormVisible = true;
     }
 
-    public function resetFormulario()
-    {
-        $this->reset();
-        $this->resetValidation();
-    }
-
     public function guardar()
     {
-        // Reglas dinámicas
         $rules = [
             'universidad' => 'required|string|max:255',
-            'url_mapa'    => 'required|string|max:10000',
-            'imagen'      => [
+            'url_mapa'    => 'required|string|max:2000',
+            'imagen' => [
                 $this->convenio_id ? 'nullable' : 'required',
                 'image',
-                'mimes:jpg,jpeg,png,webp,gif,svg,bmp,tiff,ico',
-                'max:5120'
-            ],
+                'max:5120',
+            ]
         ];
 
         $this->validate($rules);
 
-        // ============================
-        //   PROCESAR IMAGEN NUEVA
-        // ============================
         $logoPath = $this->oldImagen;
 
+        // ===========================
+        //  MANEJO DE IMAGEN CORRECTO
+        // ===========================
         if ($this->imagen) {
 
-            // eliminar imagen anterior si existe
             if ($this->oldImagen && File::exists(public_path($this->oldImagen))) {
                 File::delete(public_path($this->oldImagen));
             }
 
-            // nombre único
             $filename = uniqid() . '.' . $this->imagen->getClientOriginalExtension();
 
-            // crear directorio si no existe
             $destination = public_path('images/convenios');
             if (!File::exists($destination)) {
                 File::makeDirectory($destination, 0755, true);
             }
 
-            // guardar imagen dentro de public/images/convenios
             $this->imagen->storeAs('images/convenios', $filename, 'public_path');
 
-            // ruta que se guarda en BD
             $logoPath = 'images/convenios/' . $filename;
         }
 
-        // ============================
-        //   GUARDAR O ACTUALIZAR
-        // ============================
         if ($this->convenio_id) {
-
             Convenio::findOrFail($this->convenio_id)->update([
                 'universidad' => $this->universidad,
-                'url_mapa'    => $this->url_mapa,
-                'logo'        => $logoPath,
+                'url_mapa' => $this->url_mapa,
+                'logo' => $logoPath,
             ]);
 
             session()->flash('ok', 'Convenio actualizado.');
 
         } else {
-
             Convenio::create([
                 'universidad' => $this->universidad,
-                'url_mapa'    => $this->url_mapa,
-                'logo'        => $logoPath,
+                'url_mapa' => $this->url_mapa,
+                'logo' => $logoPath,
             ]);
 
             session()->flash('ok', 'Convenio creado.');
@@ -115,22 +104,28 @@ class ConveniosIndex extends Component
 
     public function eliminar($id)
     {
-        $convenio = Convenio::findOrFail($id);
+        $c = Convenio::findOrFail($id);
 
-        // eliminar imagen física
-        if ($convenio->logo && File::exists(public_path($convenio->logo))) {
-            File::delete(public_path($convenio->logo));
+        if ($c->logo && File::exists(public_path($c->logo))) {
+            File::delete(public_path($c->logo));
         }
 
-        $convenio->delete();
+        $c->delete();
 
         session()->flash('ok', 'Convenio eliminado.');
+    }
+
+    public function resetFormulario()
+    {
+        $this->reset();
+        $this->resetValidation();
     }
 
     #[Layout('components.layouts.admin')]
     public function render()
     {
-        $convenios = Convenio::all();
-        return view('livewire.admin.convenios-index', compact('convenios'));
+        return view('livewire.admin.convenios-index', [
+            'convenios' => Convenio::all()
+        ]);
     }
 }

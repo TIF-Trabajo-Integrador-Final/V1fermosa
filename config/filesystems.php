@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return [
 
@@ -6,45 +6,53 @@ return [
     |--------------------------------------------------------------------------
     | Default Filesystem Disk
     |--------------------------------------------------------------------------
+    |
+    | Aquí defines qué disco usará Laravel por defecto. No lo cambiaremos.
+    |
     */
+
     'default' => env('FILESYSTEM_DISK', 'local'),
 
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
     |--------------------------------------------------------------------------
+    |
+    | Aquí definimos todos los discos disponibles para la aplicación.
+    | Agregamos el nuevo disco "public_path" para guardar imágenes en /public.
+    |
     */
+
     'disks' => [
 
-        // Disk local (usado para archivos internos, no públicos)
+        // Disco local estándar (NO público)
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app/private'),
-            'serve' => true,
+            'root' => storage_path('app'),
+            'visibility' => 'private',
             'throw' => false,
-            'report' => false,
         ],
 
-        // Disk público tradicional de Laravel (NO lo usaremos para imágenes)
+        // Disco público tradicional de Laravel (usado por storage:link)
+        // En Railway NO se usa para imágenes porque el folder se borra.
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
-            'report' => false,
         ],
 
-        // NUEVO DISCO: permite guardar directamente en public/
-        // Ideal para imágenes como las de convenios y carreras
+        // 🔥 NUEVO DISCO QUE USAREMOS PARA CARRERAS Y CONVENIOS
+        // Guarda directamente dentro de /public (NO se borra en Railway)
         'public_path' => [
             'driver' => 'local',
-            'root' => public_path(),   // Dirección física: /public
+            'root' => public_path(), // /public
             'visibility' => 'public',
             'throw' => false,
         ],
 
-        // Disk Amazon S3 (sin cambios)
+        // Amazon S3 (sin cambios)
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -55,15 +63,20 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
-            'report' => false,
         ],
+
     ],
 
     /*
     |--------------------------------------------------------------------------
     | Symbolic Links
     |--------------------------------------------------------------------------
+    |
+    | Esto permite que /public/storage apunte a storage/app/public
+    | (Solo si usás storage:link)
+    |
     */
+
     'links' => [
         public_path('storage') => storage_path('app/public'),
     ],

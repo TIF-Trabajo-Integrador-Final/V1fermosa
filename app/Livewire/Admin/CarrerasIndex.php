@@ -18,7 +18,7 @@ class CarrerasIndex extends Component
     public $niveles;
     public $requisitos;
 
-    // Campos del formulario
+    // Form fields
     public $carrera_id;
     public $nombre;
     public $nivel_id;
@@ -26,22 +26,17 @@ class CarrerasIndex extends Component
     public $descripcion;
     public $perfilProfesional;
     public $duracion_meses;
-    public $imagen;        // archivo cargado
-    public $oldImagen;     // ruta existente en BD
+    public $imagen;
+    public $oldImagen;
     public $requisitosSeleccionados = [];
 
     public $isFormVisible = false;
 
-    /**
-     * Validaciones
-     */
     protected function rules()
     {
         return [
             'nombre' => [
-                'required',
-                'string',
-                'max:150',
+                'required', 'string', 'max:150',
                 Rule::unique('carreras', 'nombre')->ignore($this->carrera_id),
             ],
             'nivel_id' => 'required|exists:niveles,id',
@@ -75,16 +70,12 @@ class CarrerasIndex extends Component
             ]);
     }
 
-    /**
-     * Mostrar formulario de creación/edición
-     */
     public function mostrarFormulario($id = null)
     {
         $this->resetFormulario();
 
         if ($id) {
-            $carrera = Carrera::find($id);
-            if (!$carrera) return;
+            $carrera = Carrera::findOrFail($id);
 
             $this->carrera_id = $carrera->id;
             $this->nombre = $carrera->nombre;
@@ -100,9 +91,6 @@ class CarrerasIndex extends Component
         $this->isFormVisible = true;
     }
 
-    /**
-     * Guardar o actualizar carrera
-     */
     public function guardar()
     {
         $this->validate();
@@ -116,38 +104,37 @@ class CarrerasIndex extends Component
             'duracion_meses' => (int)$this->duracion_meses,
         ];
 
-        // ================================================
-        //  MANEJO DE IMAGENES - NUEVO SISTEMA
-        // ================================================
+        // ====================================
+        // MANEJO DE IMÁGENES CORRECTO
+        // ====================================
         if ($this->imagen) {
 
-            // Si hay imagen previa → eliminarla
+            // Eliminar imagen anterior
             if ($this->oldImagen && File::exists(public_path($this->oldImagen))) {
                 File::delete(public_path($this->oldImagen));
             }
 
-            // Generar nombre único
             $filename = uniqid() . '.' . $this->imagen->getClientOriginalExtension();
 
-            // Crear directorio si no existe
+            // Crear carpeta si no existe
             $destination = public_path('images/carreras');
             if (!File::exists($destination)) {
                 File::makeDirectory($destination, 0755, true);
             }
 
-            // Guardar imagen real en public/images/carreras
+            // Guardar archivo real
             $this->imagen->storeAs('images/carreras', $filename, 'public_path');
 
+            // Ruta que se guarda en BD
             $data['imagen'] = 'images/carreras/' . $filename;
         }
 
-        // Crear o actualizar
+        // Crear o actualizar carrera
         $carrera = Carrera::updateOrCreate(
             ['id' => $this->carrera_id],
             $data
         );
 
-        // Sincronizar requisitos
         $carrera->requisitos()->sync($this->requisitosSeleccionados);
 
         $this->cargarDatos();
@@ -156,15 +143,10 @@ class CarrerasIndex extends Component
         session()->flash('ok', 'Carrera guardada correctamente.');
     }
 
-    /**
-     * Eliminar carrera
-     */
     public function eliminar($id)
     {
-        $carrera = Carrera::find($id);
-        if (!$carrera) return;
+        $carrera = Carrera::findOrFail($id);
 
-        // Eliminar imagen física
         if ($carrera->imagen && File::exists(public_path($carrera->imagen))) {
             File::delete(public_path($carrera->imagen));
         }
@@ -175,11 +157,6 @@ class CarrerasIndex extends Component
         session()->flash('ok', 'Carrera eliminada.');
     }
 
-    protected $listeners = ['eliminar' => 'eliminar'];
-
-    /**
-     * Resetear formulario
-     */
     public function resetFormulario()
     {
         $this->reset([
@@ -193,7 +170,7 @@ class CarrerasIndex extends Component
             'imagen',
             'oldImagen',
             'requisitosSeleccionados',
-            'isFormVisible'
+            'isFormVisible',
         ]);
 
         $this->resetValidation();
