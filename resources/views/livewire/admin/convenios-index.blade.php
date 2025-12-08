@@ -160,7 +160,8 @@
 
                 <div class="p-6 space-y-6">
 
-                    <form wire:submit.prevent="guardar" class="space-y-6">
+                    <form wire:submit.prevent="guardar" enctype="multipart/form-data" class="space-y-6">
+
 
                         <!-- Universidad -->
                         <div>
