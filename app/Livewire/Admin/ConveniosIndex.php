@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Livewire\Admin;
 
@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use App\Models\Convenio;
+use Illuminate\Support\Facades\File;
 
 class ConveniosIndex extends Component
 {
@@ -15,21 +16,17 @@ class ConveniosIndex extends Component
     public $convenio_id;
     public $universidad;
     public $url_mapa;
-
-    // Imagen nueva (temporal)
-    public $imagen;
-
-    // Imagen anterior cuando se edita
-    public $oldImagen;
-
-    // --- BORRAMOS LA FUNCIÓN rules() DE AQUÍ ---
+    public $imagen;       // Nueva imagen
+    public $oldImagen;    // Imagen existente en BD
 
     public function mostrarFormulario($id = null)
     {
         $this->reset(['convenio_id', 'universidad', 'url_mapa', 'imagen', 'oldImagen']);
+        $this->resetValidation();
 
         if ($id) {
             $convenio = Convenio::findOrFail($id);
+
             $this->convenio_id = $convenio->id;
             $this->universidad = $convenio->universidad;
             $this->url_mapa    = $convenio->url_mapa;
@@ -42,43 +39,68 @@ class ConveniosIndex extends Component
     public function resetFormulario()
     {
         $this->reset();
-        // Limpiamos los errores de validación anteriores
-        $this->resetValidation(); 
+        $this->resetValidation();
     }
 
     public function guardar()
     {
-        // 1. Definimos las reglas AQUÍ DENTRO para asegurar que lea bien el ID
+        // Reglas dinámicas
         $rules = [
             'universidad' => 'required|string|max:255',
             'url_mapa'    => 'required|string|max:10000',
-            // Usamos sintaxis de array para mayor seguridad
             'imagen'      => [
-                $this->convenio_id ? 'nullable' : 'required', 
+                $this->convenio_id ? 'nullable' : 'required',
+                'image',
                 'mimes:jpg,jpeg,png,webp,gif,svg,bmp,tiff,ico',
                 'max:5120'
             ],
         ];
 
-        // 2. Ejecutamos la validación manualmente con esas reglas
         $this->validate($rules);
 
-        // Procesar imagen
+        // ============================
+        //   PROCESAR IMAGEN NUEVA
+        // ============================
         $logoPath = $this->oldImagen;
 
         if ($this->imagen) {
-            $logoPath = $this->imagen->store('convenios', 'public');
+
+            // eliminar imagen anterior si existe
+            if ($this->oldImagen && File::exists(public_path($this->oldImagen))) {
+                File::delete(public_path($this->oldImagen));
+            }
+
+            // nombre único
+            $filename = uniqid() . '.' . $this->imagen->getClientOriginalExtension();
+
+            // crear directorio si no existe
+            $destination = public_path('images/convenios');
+            if (!File::exists($destination)) {
+                File::makeDirectory($destination, 0755, true);
+            }
+
+            // guardar imagen dentro de public/images/convenios
+            $this->imagen->storeAs('images/convenios', $filename, 'public_path');
+
+            // ruta que se guarda en BD
+            $logoPath = 'images/convenios/' . $filename;
         }
 
+        // ============================
+        //   GUARDAR O ACTUALIZAR
+        // ============================
         if ($this->convenio_id) {
-            Convenio::find($this->convenio_id)->update([
+
+            Convenio::findOrFail($this->convenio_id)->update([
                 'universidad' => $this->universidad,
                 'url_mapa'    => $this->url_mapa,
                 'logo'        => $logoPath,
             ]);
 
             session()->flash('ok', 'Convenio actualizado.');
+
         } else {
+
             Convenio::create([
                 'universidad' => $this->universidad,
                 'url_mapa'    => $this->url_mapa,
@@ -94,6 +116,12 @@ class ConveniosIndex extends Component
     public function eliminar($id)
     {
         $convenio = Convenio::findOrFail($id);
+
+        // eliminar imagen física
+        if ($convenio->logo && File::exists(public_path($convenio->logo))) {
+            File::delete(public_path($convenio->logo));
+        }
+
         $convenio->delete();
 
         session()->flash('ok', 'Convenio eliminado.');

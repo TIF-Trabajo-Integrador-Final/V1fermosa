@@ -1,4 +1,3 @@
-
 <div class="relative pt-20 overflow-hidden convenios-bg font-montserrat">
 
     {{-- Fuente institucional --}}
@@ -63,11 +62,15 @@
                     Convenios Institucionales
                 </h1>
 
-                @php
-                    use Illuminate\Support\Facades\Storage;
-                @endphp
-
                 @forelse ($convenios as $convenio)
+
+                    @php
+                        // Preparamos la URL correcta del logo
+                        $logo = $convenio->logo 
+                                ? asset($convenio->logo)
+                                : asset('images/placeholder-convenio.jpg');
+                    @endphp
+
                     <!-- TARJETA PREMIUM -->
                     <section class="card-premium rounded-2xl p-8 border border-white/40 overflow-hidden relative">
                         <div class="flex flex-col md:flex-row gap-8 items-center md:items-center">
@@ -76,24 +79,10 @@
                             <div class="w-full md:w-1/3 flex justify-center">
                                 <div class="h-72 w-full max-w-sm bg-white rounded-xl p-4 shadow-md 
                                             overflow-hidden border border-gray-200 group relative">
-                                        @php
-                                                $logoUrl = $convenio->logo ? Storage::url($convenio->logo) : null;
-                                            @endphp
 
-                                    @if($logoUrl)
-                                        <img src="{{ $logoUrl }}">
-                                @endif
-
-
-                                    @if($logoUrl)
-                                        <img src="{{ $logoUrl }}"
-                                             alt="Logo {{ $convenio->universidad }}"
-                                             class="w-full h-full object-cover rounded-lg transform transition duration-700 ease-out group-hover:scale-105">
-                                    @else
-                                        <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-500 rounded-lg">
-                                            Sin logo disponible
-                                        </div>
-                                    @endif
+                                    <img src="{{ $logo }}"
+                                         alt="Logo {{ $convenio->universidad }}"
+                                         class="w-full h-full object-contain rounded-lg transform transition duration-700 ease-out group-hover:scale-105">
                                 </div>
                             </div>
 
@@ -129,7 +118,9 @@
 
                         </div>
                     </section>
+
                 @empty
+
                     <!-- SIN CONVENIOS -->
                     <div class="bg-[#cbd2e6] shadow-2xl rounded-lg p-6 border border-white/40 flex flex-col items-center text-center">
                         <i class="fas fa-info-circle text-4xl text-[#1c2a8a] mb-4"></i>
@@ -138,6 +129,7 @@
                             No hay convenios cargados por el momento.
                         </p>
                     </div>
+
                 @endforelse
 
             </div>

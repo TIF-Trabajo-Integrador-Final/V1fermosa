@@ -41,6 +41,13 @@
         <!-- FILAS ESCRITORIO -->
         <div class="hidden md:block divide-y divide-gray-200">
             @forelse ($convenios as $convenio)
+
+                @php
+                    $logo = $convenio->logo
+                        ? asset($convenio->logo)
+                        : asset('images/placeholder-carrera.jpg');
+                @endphp
+
                 <div class="grid p-4 gap-2 items-start text-gray-700 w-full"
                     style="grid-template-columns:1.5fr 1fr 1.5fr 1fr;">
 
@@ -49,14 +56,9 @@
 
                     <!-- LOGO -->
                     <div class="flex justify-center items-center">
-                        @if ($convenio->logo)
-                            <img src="{{ storage_url($convenio->logo) }}"
-                                class="h-14 w-14 rounded object-cover shadow"
-                                alt="{{ $convenio->universidad }}"
-                                onerror="this.style.display='none'" />
-                        @else
-                            <span class="text-gray-400 italic text-xs">Sin logo</span>
-                        @endif
+                        <img src="{{ $logo }}"
+                             class="h-14 w-14 rounded object-cover shadow"
+                             alt="{{ $convenio->universidad }}">
                     </div>
 
                     <!-- MAPA -->
@@ -74,8 +76,8 @@
                         </button>
 
                         <button wire:click="eliminar({{ $convenio->id }})"
-                            class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs"
-                            onclick="return confirm('¿Estás seguro?')">
+                            onclick="return confirm('¿Estás seguro?')"
+                            class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">
                             Eliminar
                         </button>
                     </div>
@@ -92,18 +94,22 @@
         <div class="md:hidden divide-y divide-gray-300">
 
             @foreach ($convenios as $convenio)
+
+                @php
+                    $logo = $convenio->logo
+                        ? asset($convenio->logo)
+                        : asset('images/placeholder-carrera.jpg');
+                @endphp
+
                 <div class="p-4">
 
-                    <!-- Título -->
                     <h3 class="text-lg font-bold text-blue-900 mb-2">
                         {{ $convenio->universidad }}
                     </h3>
 
                     <!-- Logo -->
-                    @if ($convenio->logo)
-                        <img src="{{ storage_url($convenio->logo) }}"
-                            class="w-full max-w-[200px] mx-auto h-32 object-cover rounded shadow mb-3">
-                    @endif
+                    <img src="{{ $logo }}"
+                         class="w-full max-w-[200px] mx-auto h-32 object-cover rounded shadow mb-3">
 
                     <!-- Mapa -->
                     <p class="text-sm mb-2"><strong>Mapa:</strong></p>
@@ -127,6 +133,7 @@
                     </div>
 
                 </div>
+
             @endforeach
 
         </div>
@@ -170,14 +177,23 @@
                             <div class="flex gap-6 items-center flex-wrap">
 
                                 <div class="flex flex-col items-center">
+
+                                    @php
+                                        $logoActual = $oldImagen
+                                            ? asset($oldImagen)
+                                            : asset('images/placeholder-carrera.jpg');
+                                    @endphp
+
                                     @if ($imagen)
                                         <img src="{{ $imagen->temporaryUrl() }}"
                                             class="h-32 w-32 rounded object-cover border-2 border-green-600">
                                         <p class="text-xs text-green-600 mt-2">Previsualización</p>
+
                                     @elseif ($oldImagen)
-                                        <img src="{{ storage_url($oldImagen) }}"
+                                        <img src="{{ $logoActual }}"
                                             class="h-32 w-32 rounded object-cover border-2 border-blue-600">
                                         <p class="text-xs text-blue-600 mt-2">Imagen actual</p>
+
                                     @else
                                         <div class="h-32 w-32 rounded bg-gray-200 border-2 border-dashed border-gray-400 flex items-center justify-center">
                                             <span class="text-xs text-gray-500">Sin imagen</span>

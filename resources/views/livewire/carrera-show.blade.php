@@ -3,7 +3,6 @@
     {{-- ========================================================= --}}
     {{-- FONDO AZUL EMPRESARIAL + EFECTO DE CAPAS PREMIUM --}}
     {{-- ========================================================= --}}
-    {{-- APLICAMOS MONTSERRAT A TODO EL CONTENEDOR PRINCIPAL --}}
     <div class="relative min-h-screen bg-[#C1D6EC] pt-32 pb-16 font-montserrat">
 
         {{-- Fondo decorativo con líneas premium --}}
@@ -29,10 +28,16 @@
                     {{-- ============================ --}}
                     {{-- IMAGEN CON ZOOM GLASS --}}
                     {{-- ============================ --}}
+                    @php
+                        $img = $carrera->imagen
+                                ? asset($carrera->imagen)
+                                : asset('images/placeholder-carrera.jpg');
+                    @endphp
+
                     <div class="relative overflow-hidden rounded-xl shadow-lg 
                                 w-full h-64 bg-white/40 backdrop-blur-md group">
 
-                        <img src="{{ storage_url($carrera->imagen) }}"
+                        <img src="{{ $img }}"
                             alt="{{ $carrera->nombre }}"
                             class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
                     </div>
@@ -40,45 +45,41 @@
                     {{-- ============================ --}}
                     {{-- INFORMACIÓN DE LA CARRERA --}}
                     {{-- ============================ --}}
-                    <div class="md:col-span-2 space-y-5"> {{-- Aumentado el espacio para mejor lectura --}}
+                    <div class="md:col-span-2 space-y-5">
 
-                        {{-- TÍTULO PRINCIPAL: Color azul institucional --}}
                         <h1 class="text-4xl font-extrabold text-[#131567] tracking-wide">
                             {{ $carrera->nombre }}
                         </h1>
 
-                        {{-- Datos de Nivel y Duración: Color texto oscuro --}}
                         <p class="text-[#131567] font-semibold">
-                            Nivel académico:<span class="font-normal">{{ $carrera->nivel->nombre }}</span>
+                            Nivel académico:
+                            <span class="font-normal">{{ $carrera->nivel->nombre }}</span>
                         </p>
 
                         <p class="text-[#131567] font-semibold">
-                            Duración: <span class="font-normal">{{ $carrera->duracion_meses }} meses</span>
+                            Duración:
+                            <span class="font-normal">{{ $carrera->duracion_meses }} meses</span>
                         </p>
 
                         {{-- DESCRIPCIÓN --}}
                         <div>
-                            {{-- SUBTÍTULO: Color azul institucional --}}
                             <h3 class="text-xl font-bold text-[#131567] mb-1">Descripción:</h3>
-                            {{-- TEXTO JUSTIFICADO --}}
-                            <p class="text-gray-700 text-justify">{{ $carrera->descripcion }}</p>
+                            <p class="text-gray-700 text-justify">
+                                {{ $carrera->descripcion }}
+                            </p>
                         </div>
 
                         {{-- PERFIL PROFESIONAL --}}
                         <div>
-                            {{-- SUBTÍTULO: Color azul institucional --}}
                             <h3 class="text-xl font-bold text-[#131567] mb-1">Perfil Profesional:</h3>
-                            {{-- TEXTO JUSTIFICADO --}}
-                            <p class="text-gray-700 text-justify">{{ $carrera->perfil_profesional }}</p>
+                            <p class="text-gray-700 text-justify">
+                                {{ $carrera->perfil_profesional }}
+                            </p>
                         </div>
 
-                        {{-- ============================ --}}
-                        {{-- LISTA DE REQUISITOS --}}
-                        {{-- ============================ --}}
+                        {{-- REQUISITOS --}}
                         <div>
-                            {{-- SUBTÍTULO: Color azul institucional --}}
                             <h3 class="text-xl font-bold text-[#131567] mb-2">Requisitos:</h3>
-                            {{-- TEXTO LISTA: Color texto oscuro --}}
                             <ul class="list-disc pl-6 text-gray-700 space-y-1">
                                 @foreach ($carrera->requisitos as $req)
                                     <li>{{ $req->descripcion }}</li>
@@ -87,7 +88,7 @@
                         </div>
 
                         {{-- BOTÓN VOLVER --}}
-                        <div class="w-full flex justify-start mt-8"> {{-- Se cambió a justify-start para que el botón se alinee con el texto --}}
+                        <div class="w-full flex justify-start mt-8">
                             <a href="{{ route('carreras') }}"
                                 class="px-6 py-3 bg-[#131567] text-white font-semibold rounded-lg shadow-md
                                     hover:bg-white hover:text-[#131567] border border-[#131567]
@@ -110,23 +111,24 @@
     {{-- ESTILOS GLOBALES GLASS (MISMO DE INICIO / CARRERAS) --}}
     {{-- ========================================================= --}}
     <style>
-        /* Aquí no se toca el CSS para mantener la lógica Glassmorphism */
         .glass-card {
             background: rgba(255, 255, 255, 0.28);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.35);
             border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.25),
-                        inset 0 0 25px rgba(255,255,255,0.25);
+            box-shadow: 
+                0 8px 25px rgba(0,0,0,0.25),
+                inset 0 0 25px rgba(255,255,255,0.25);
             transition: .3s ease-in-out;
         }
 
         .glass-card:hover {
             background: rgba(255,255,255,0.40);
             transform: scale(1.01);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.30),
-                        inset 0 0 35px rgba(255,255,255,0.4);
+            box-shadow: 
+                0 12px 35px rgba(0,0,0,0.30),
+                inset 0 0 35px rgba(255,255,255,0.4);
         }
     </style>
 

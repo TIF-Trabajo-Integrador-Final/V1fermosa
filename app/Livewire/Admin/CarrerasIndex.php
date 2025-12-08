@@ -7,8 +7,7 @@ use App\Models\Nivel;
 use App\Models\Requisito;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 
 class CarrerasIndex extends Component
@@ -25,16 +24,16 @@ class CarrerasIndex extends Component
     public $nivel_id;
     public $modalidad;
     public $descripcion;
-    public $perfilProfesional; // CAMBIO: este campo mapea a perfil_profesional
+    public $perfilProfesional;
     public $duracion_meses;
-    public $imagen;
-    public $oldImagen;
+    public $imagen;        // archivo cargado
+    public $oldImagen;     // ruta existente en BD
     public $requisitosSeleccionados = [];
 
     public $isFormVisible = false;
 
     /**
-     * REGIONAL: Reglas de validación corregidas
+     * Validaciones
      */
     protected function rules()
     {
@@ -43,15 +42,15 @@ class CarrerasIndex extends Component
                 'required',
                 'string',
                 'max:150',
-                Rule::unique('carreras', 'nombre')->ignore($this->carrera_id), // CAMBIO
+                Rule::unique('carreras', 'nombre')->ignore($this->carrera_id),
             ],
-            'nivel_id' => 'required|exists:niveles,id', // CAMBIO
+            'nivel_id' => 'required|exists:niveles,id',
             'modalidad' => 'required|string|max:100',
             'descripcion' => 'required|string',
-            'perfilProfesional' => 'nullable|string', // CAMBIO para mapear correctamente
+            'perfilProfesional' => 'nullable|string',
             'duracion_meses' => 'required|integer|min:1|max:72',
             'imagen' => 'nullable|image|max:6550',
-            'requisitosSeleccionados' => 'array', // CAMBIO
+            'requisitosSeleccionados' => 'array',
             'requisitosSeleccionados.*' => 'exists:requisitos,id',
         ];
     }
@@ -76,13 +75,15 @@ class CarrerasIndex extends Component
             ]);
     }
 
+    /**
+     * Mostrar formulario de creación/edición
+     */
     public function mostrarFormulario($id = null)
     {
-        $this->resetFormulario(); // CAMBIO: limpiamos todo
+        $this->resetFormulario();
 
         if ($id) {
             $carrera = Carrera::find($id);
-
             if (!$carrera) return;
 
             $this->carrera_id = $carrera->id;
@@ -90,7 +91,7 @@ class CarrerasIndex extends Component
             $this->nivel_id = $carrera->nivel_id;
             $this->modalidad = $carrera->modalidad;
             $this->descripcion = $carrera->descripcion;
-            $this->perfilProfesional = $carrera->perfil_profesional; // CAMBIO
+            $this->perfilProfesional = $carrera->perfil_profesional;
             $this->duracion_meses = $carrera->duracion_meses;
             $this->oldImagen = $carrera->imagen;
             $this->requisitosSeleccionados = $carrera->requisitos->pluck('id')->toArray();
@@ -99,61 +100,86 @@ class CarrerasIndex extends Component
         $this->isFormVisible = true;
     }
 
+    /**
+     * Guardar o actualizar carrera
+     */
     public function guardar()
     {
         $this->validate();
 
-        // CAMBIO: Mapeo correcto BD <-> Livewire
         $data = [
             'nombre' => $this->nombre,
             'nivel_id' => (int)$this->nivel_id,
             'modalidad' => $this->modalidad,
             'descripcion' => $this->descripcion,
-            'perfil_profesional' => $this->perfilProfesional, // CAMBIO
+            'perfil_profesional' => $this->perfilProfesional,
             'duracion_meses' => (int)$this->duracion_meses,
         ];
 
-        // Procesar imagen
+        // ================================================
+        //  MANEJO DE IMAGENES - NUEVO SISTEMA
+        // ================================================
         if ($this->imagen) {
-            if ($this->oldImagen && Storage::disk('public')->exists($this->oldImagen)) {
-                Storage::disk('public')->delete($this->oldImagen); // CAMBIO
+
+            // Si hay imagen previa → eliminarla
+            if ($this->oldImagen && File::exists(public_path($this->oldImagen))) {
+                File::delete(public_path($this->oldImagen));
             }
 
-            $ruta = $this->imagen->store('carreras', 'public'); // CAMBIO
-            $data['imagen'] = $ruta;
+            // Generar nombre único
+            $filename = uniqid() . '.' . $this->imagen->getClientOriginalExtension();
+
+            // Crear directorio si no existe
+            $destination = public_path('images/carreras');
+            if (!File::exists($destination)) {
+                File::makeDirectory($destination, 0755, true);
+            }
+
+            // Guardar imagen real en public/images/carreras
+            $this->imagen->storeAs('images/carreras', $filename, 'public_path');
+
+            $data['imagen'] = 'images/carreras/' . $filename;
         }
 
-        // Guardar o actualizar
-        $carrera = Carrera::updateOrCreate(['id' => $this->carrera_id], $data);
+        // Crear o actualizar
+        $carrera = Carrera::updateOrCreate(
+            ['id' => $this->carrera_id],
+            $data
+        );
 
         // Sincronizar requisitos
         $carrera->requisitos()->sync($this->requisitosSeleccionados);
 
-        // Recargar datos
         $this->cargarDatos();
         $this->resetFormulario();
 
         session()->flash('ok', 'Carrera guardada correctamente.');
     }
 
+    /**
+     * Eliminar carrera
+     */
     public function eliminar($id)
     {
         $carrera = Carrera::find($id);
         if (!$carrera) return;
 
-        if ($carrera->imagen && Storage::disk('public')->exists($carrera->imagen)) {
-            Storage::disk('public')->delete($carrera->imagen); // CAMBIO
+        // Eliminar imagen física
+        if ($carrera->imagen && File::exists(public_path($carrera->imagen))) {
+            File::delete(public_path($carrera->imagen));
         }
 
         $carrera->delete();
 
         $this->cargarDatos();
-
         session()->flash('ok', 'Carrera eliminada.');
     }
+
     protected $listeners = ['eliminar' => 'eliminar'];
 
-
+    /**
+     * Resetear formulario
+     */
     public function resetFormulario()
     {
         $this->reset([

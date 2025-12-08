@@ -45,19 +45,21 @@
         <!-- FILAS ESCRITORIO -->
         <div class="divide-y divide-gray-200 hidden md:block">
             @forelse ($carreras as $carrera)
+
+                @php
+                    $img = $carrera->imagen 
+                            ? asset($carrera->imagen)
+                            : asset('images/placeholder-carrera.jpg');
+                @endphp
+
                 <div class="grid p-4 gap-2 items-start text-gray-700 w-full"
                     style="grid-template-columns:80px 1.2fr 1fr 1fr 0.8fr 1fr 1.8fr 1fr 0.9fr;">
 
                     <!-- IMAGEN -->
                     <div class="flex justify-center items-center">
-                        @if ($carrera->imagen)
-                            <img src="{{ storage_url($carrera->imagen) }}"
-                                class="h-14 w-14 rounded object-cover shadow"
-                                alt="{{ $carrera->nombre }}"
-                                onerror="this.style.display='none'" />
-                        @else
-                            <span class="text-gray-400 italic text-xs text-center">Sin imagen</span>
-                        @endif
+                        <img src="{{ $img }}"
+                             class="h-14 w-14 rounded object-cover shadow"
+                             alt="{{ $carrera->nombre }}">
                     </div>
 
                     <!-- NOMBRE -->
@@ -76,7 +78,7 @@
 
                     <!-- PERFIL PROFESIONAL -->
                     <div class="text-sm min-w-0 break-words">
-                        {{ Str::limit($carrera->perfil_profesional ?? $carrera->perfilProfesional ?? '', 120) }}
+                        {{ Str::limit($carrera->perfil_profesional, 120) }}
                     </div>
 
                     <!-- DESCRIPCIÓN -->
@@ -124,14 +126,19 @@
         <!-- ============================================= -->
         <div class="md:hidden divide-y divide-gray-300">
             @foreach ($carreras as $carrera)
+
+                @php
+                    $img = $carrera->imagen 
+                            ? asset($carrera->imagen)
+                            : asset('images/placeholder-carrera.jpg');
+                @endphp
+
                 <div class="p-4">
 
                     <h3 class="text-lg font-bold text-blue-900 mb-2">{{ $carrera->nombre }}</h3>
 
-                    @if ($carrera->imagen)
-                        <img src="{{ storage_url($carrera->imagen) }}"
-                            class="w-full h-40 object-cover rounded-lg shadow mb-3">
-                    @endif
+                    <img src="{{ $img }}"
+                         class="w-full h-40 object-cover rounded-lg shadow mb-3">
 
                     <p class="text-sm"><strong>Nivel:</strong> {{ $carrera->nivel?->nombre }}</p>
                     <p class="text-sm"><strong>Modalidad:</strong> {{ $carrera->modalidad }}</p>
@@ -178,8 +185,9 @@
     </div>
 
 
+
     <!-- ======================= -->
-    <!--     MODAL (IN ALTERO)   -->
+    <!--     MODAL DEL FORM      -->
     <!-- ======================= -->
 
     @if ($isFormVisible)
@@ -208,7 +216,7 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                            <!-- Nombre -->
+                            {{-- Nombre --}}
                             <div>
                                 <label class="font-semibold text-sm">Nombre</label>
                                 <input type="text" wire:model="nombre"
@@ -216,7 +224,7 @@
                                 @error('nombre') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
                             </div>
 
-                            <!-- Nivel -->
+                            {{-- Nivel --}}
                             <div>
                                 <label class="font-semibold text-sm">Nivel</label>
                                 <select wire:model="nivel_id"
@@ -229,7 +237,7 @@
                                 @error('nivel_id') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
                             </div>
 
-                            <!-- Modalidad -->
+                            {{-- Modalidad --}}
                             <div>
                                 <label class="font-semibold text-sm">Modalidad</label>
                                 <input type="text" wire:model="modalidad"
@@ -237,7 +245,7 @@
                                 @error('modalidad') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
                             </div>
 
-                            <!-- Duración -->
+                            {{-- Duración --}}
                             <div>
                                 <label class="font-semibold text-sm">Duración (meses)</label>
                                 <input type="number" wire:model="duracion_meses"
@@ -245,7 +253,7 @@
                                 @error('duracion_meses') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
                             </div>
 
-                            <!-- Descripción -->
+                            {{-- Descripción --}}
                             <div class="md:col-span-2">
                                 <label class="font-semibold text-sm">Descripción</label>
                                 <textarea wire:model="descripcion"
@@ -253,22 +261,25 @@
                                 @error('descripcion') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
                             </div>
 
-                            <!-- Imagen -->
+                            {{-- Imagen --}}
                             <div class="md:col-span-2">
                                 <label class="font-semibold text-sm block mb-2">Imagen (máximo 5 MB)</label>
 
                                 <div class="flex gap-6 items-center flex-wrap">
 
-                                    <!-- Previsualización -->
+                                    {{-- Previsualización --}}
                                     <div class="flex flex-col items-center">
+
                                         @if ($imagen)
+                                            {{-- Preview Livewire de nueva imagen --}}
                                             <img src="{{ $imagen->temporaryUrl() }}"
-                                                class="h-32 w-32 rounded object-cover border-2 border-green-600">
+                                                 class="h-32 w-32 rounded object-cover border-2 border-green-600">
                                             <p class="text-xs text-green-600 mt-2">Previsualización</p>
 
                                         @elseif ($oldImagen)
-                                            <img src="{{ storage_url($oldImagen) }}"
-                                                class="h-32 w-32 rounded object-cover border-2 border-blue-600">
+                                            {{-- Imagen actual (corregida a asset) --}}
+                                            <img src="{{ asset($oldImagen) }}"
+                                                 class="h-32 w-32 rounded object-cover border-2 border-blue-600">
                                             <p class="text-xs text-blue-600 mt-2">Imagen actual</p>
 
                                         @else
@@ -278,7 +289,7 @@
                                         @endif
                                     </div>
 
-                                    <!-- Input -->
+                                    {{-- Input --}}
                                     <div class="flex-1">
                                         <label class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded border border-blue-300 cursor-pointer font-medium hover:bg-blue-200">
                                             <input type="file" class="hidden" wire:model="imagen">
@@ -295,7 +306,7 @@
                                 </div>
                             </div>
 
-                            <!-- Perfil profesional -->
+                            {{-- Perfil profesional --}}
                             <div class="md:col-span-2">
                                 <label class="font-semibold text-sm">Perfil Profesional</label>
                                 <textarea wire:model="perfilProfesional"
@@ -305,7 +316,7 @@
                                 @enderror
                             </div>
 
-                            <!-- Requisitos -->
+                            {{-- Requisitos --}}
                             <div class="md:col-span-2">
                                 <label class="font-semibold text-sm">Requisitos</label>
 
@@ -320,13 +331,13 @@
                                 </div>
 
                                 @error('requisitosSeleccionados')
-                  <p class="text-red-600 text-sm">{{ $message }}</p>
+                                    <p class="text-red-600 text-sm">{{ $message }}</p>
                                 @enderror
                             </div>
 
                         </div>
 
-                        <!-- BOTONES -->
+                        {{-- BOTONES --}}
                         <div class="flex justify-end gap-4 border-t pt-4">
                             <button type="button" wire:click="resetFormulario"
                                 class="px-5 py-2 bg-gray-300 hover:bg-gray-400 rounded">
