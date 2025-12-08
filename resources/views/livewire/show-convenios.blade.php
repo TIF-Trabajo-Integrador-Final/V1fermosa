@@ -58,9 +58,11 @@
             <!-- ============================= -->
             <div class="max-w-5xl mx-auto p-6 relative space-y-10 z-10">
 
-                <h1 class="text-5xl font-extrabold text-[#131567] mb-10 text-center leading-tight" data-aos="fade-down">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#131567] mb-10 text-center leading-tight"
+                    data-aos="fade-down">
                     Convenios Institucionales
                 </h1>
+
 
                 @forelse ($convenios as $convenio)
 

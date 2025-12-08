@@ -14,7 +14,7 @@ class Carreras extends Component
     {
         $this->carreras = Carrera::with('nivel')->orderBy ('nivel_id')->get();
 
-        // 🔥 ESTO ALIMENTA TU DROPDOWN DEL LAYOUT
+        // ESTO ALIMENTA TU DROPDOWN DEL LAYOUT
         $this->menuCarreras = Carrera::orderBy('nombre')->get();
     }
 
@@ -23,7 +23,7 @@ class Carreras extends Component
         return view('livewire.carreras')
             ->layout('components.layouts.app', [
                 'title'        => 'Oferta Académica',
-                'menuCarreras' => $this->menuCarreras, // 🔥 AQUÍ SE ENVÍA AL LAYOUT
+                'menuCarreras' => $this->menuCarreras, //  AQUÍ SE ENVÍA AL LAYOUT
             ]);
     }
 }

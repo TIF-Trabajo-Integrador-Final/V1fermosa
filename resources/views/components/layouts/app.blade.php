@@ -97,38 +97,46 @@
                 </a>
 
                 {{-- DESPLEGABLE SOLO EN CARRERAS --}}
-                @if(request()->routeIs('carreras'))
-                    <div x-data="{ open: false }" class="relative">
-                        <button @mouseenter="open = true" @mouseleave="open = false"
-                                class="text-white hover:text-blue-200 transition flex items-center p-2">
-                            <i class="fas fa-chevron-down text-sm"></i>
-                        </button>
+                        @if(request()->routeIs('carreras'))
+                            <div x-data="{ open: false }" class="relative">
+                                <button @mouseenter="open = true" @mouseleave="open = false"
+                                        class="text-white hover:text-blue-200 transition flex items-center p-2">
+                                    <i class="fas fa-chevron-down text-sm"></i>
+                                </button>
 
-                        <div x-show="open" @mouseenter="open = true" @mouseleave="open = false" x-transition
-                            class="absolute left-0 mt-2 w-72 bg-white shadow-xl rounded-lg border border-blue-900/30 z-50 overflow-hidden">
+                                <div x-show="open" 
+                                    @mouseenter="open = true" 
+                                    @mouseleave="open = false" 
+                                    x-transition
+                                    class="absolute left-1/2 transform -translate-x-1/2 mt-2 w-72 bg-white shadow-xl 
+                                            rounded-lg border border-blue-900/30 z-50 overflow-hidden">
 
-                            @php
-                                $niveles = \App\Models\Nivel::with('carreras')->orderBy('id')->get();
-                            @endphp
+                                    @php
+                                        $niveles = \App\Models\Nivel::with('carreras')->orderBy('id')->get();
+                                    @endphp
 
-                            @foreach($niveles as $nivel)
-                                @if($nivel->carreras->count())
-                                    <div class="px-4 py-2 bg-blue-50 border-b border-blue-200">
-                                        <p class="text-sm font-semibold text-[#131567] uppercase tracking-wide">
-                                            {{ $nivel->nombre }}
-                                        </p>
-                                    </div>
-                                    @foreach($nivel->carreras as $carrera)
-                                        <a href="{{ route('carrera.show', $carrera->id) }}"
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-900 transition">
-                                            {{ $carrera->nombre }}
-                                        </a>
+                                    @foreach($niveles as $nivel)
+                                        @if($nivel->carreras->count())
+                                            <div class="px-4 py-2 bg-blue-50 border-b border-blue-200">
+                                                <p class="text-sm font-semibold text-[#131567] uppercase tracking-wide">
+                                                    {{ $nivel->nombre }}
+                                                </p>
+                                            </div>
+
+                                            @foreach($nivel->carreras as $carrera)
+                                                <a href="{{ route('carrera.show', $carrera->id) }}"
+                                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-900 transition">
+                                                    {{ $carrera->nombre }}
+                                                </a>
+                                            @endforeach
+
+                                        @endif
                                     @endforeach
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
+
+                                </div>
+                            </div>
+                        @endif
+
 
                 <a href="{{ route('convenios') }}" class="text-white hover:text-blue-200 transition font-medium flex items-center">
                     <i class="fas fa-university mr-1 icon-blue"></i> <span class="hidden md:inline">Convenios</span>
@@ -228,7 +236,7 @@
 
     <!-- COPY CENTRADO -->
     <div class="mt-6 text-center text-xs text-gray-300 border-t border-blue-800/40 pt-3 font-montserrat">
-        © {{ date('Y') }} Instituto Superior Fermosa — Todos los derechos reservados.
+        © {{ date('Y') }} Instituto Superior Fermosa — Todos los derechos reservados. Desarrollado por el equipo BEYAVA.
     </div>
 
 </footer>
@@ -242,6 +250,7 @@
 
 
     @livewireScripts
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script> AOS.init(); </script>

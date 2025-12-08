@@ -60,11 +60,15 @@
 <div x-data="{ openSidebar: false, openApps: false }" class="min-h-screen flex flex-col">
 
     <!-- NAV SUPERIOR -->
-    <nav class="bg-blue-900 text-white px-4 py-3 flex items-center justify-between shadow-md border-b border-white/5">
+   <!-- NAV SUPERIOR -->
+<nav class="bg-blue-900 text-white px-4 py-3 shadow-md border-b border-white/5">
 
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-1">
+
+        <!-- IZQUIERDA → Logo + Botones -->
         <div class="flex items-center gap-3">
 
-            <!-- Botón Grid de apps (SOLO ESCRITORIO) -->
+            <!-- Botón Grid de apps (solo escritorio) -->
             <button @click="openApps = !openApps" class="text-2xl hover:text-gray-300 hidden lg:block">
                 ▦
             </button>
@@ -74,14 +78,23 @@
                 ☰
             </button>
 
-            <h1 class="font-bold text-lg ml-2">Administrador ISF</h1>
+            <!-- TITULO DEL PANEL -->
+            <h1 class="font-bold text-lg leading-tight">
+                Administrador <span class="block lg:inline">ISF</span>
+            </h1>
         </div>
 
-        <div>
-            <span class="text-sm">Bienvenido, <strong>{{ Auth::user()->name }}</strong></span>
+                <!-- TEXTO DE BIENVENIDA CENTRADO -->
+        <div class="text-sm leading-tight text-center w-full lg:w-auto">
+            <span class="opacity-90 block">Bienvenido,</span>
+            <strong class="whitespace-nowrap block">Administrador de la Página</strong>
         </div>
 
-    </nav>
+
+    </div>
+
+</nav>
+
 
     <!-- MENÚ DESPLEGABLE DE APPS (solo escritorio) -->
     <div 
