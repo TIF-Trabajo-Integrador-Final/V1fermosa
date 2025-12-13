@@ -85,14 +85,15 @@
 
                 {{-- Botones --}}
 
-                    <button type="submit"
-                        class="px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl shadow-md font-semibold text-white
-                               text-sm sm:text-base
-                               bg-gradient-to-r from-[#3C5CCF] to-[#131567]
-                               hover:opacity-90 transition">
-                        <i class="fas fa-sign-in-alt mr-1"></i> Ingresar
-                    </button>
-                </div>
+                <div class="mt-6 w-full flex justify-center">
+                  <button type="submit"
+                    class="px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl shadow-md font-semibold text-white
+                        text-sm sm:text-base
+                        bg-gradient-to-r from-[#3C5CCF] to-[#131567]
+                        hover:opacity-90 transition">
+                    <i class="fas fa-sign-in-alt mr-1"></i> Ingresar
+                </button>
+            </div>
 
             </form>
         </div>
