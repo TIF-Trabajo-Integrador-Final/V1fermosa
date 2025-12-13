@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log; // Importante para ver errores
 
 class PasswordCodeController extends Controller
 {
@@ -18,9 +19,12 @@ class PasswordCodeController extends Controller
         return view('auth.forgot-password');
     }
 
-    // 2) Enviar código al correo
+    // 2) Enviar código al correo (AQUÍ ESTÁ LA SOLUCIÓN AL ERROR 500)
     public function send(Request $request)
     {
+        // SOLUCIÓN 1: Aumentar el tiempo de espera a 120 segundos
+        set_time_limit(120); 
+
         $request->validate(['email' => 'required|email']);
 
         if (!User::where('email', $request->email)->exists()) {
@@ -30,18 +34,26 @@ class PasswordCodeController extends Controller
         // Generar código
         $code = rand(100000, 999999);
 
-        // Guardar código
-        PasswordOtp::create([
-            'email'      => $request->email,
-            'code'       => $code,
-            'expires_at' => Carbon::now()->addMinutes(5),
-        ]);
+        // Guardar código (Create o Update)
+        PasswordOtp::updateOrCreate(
+            ['email' => $request->email], // Busca por email
+            [
+                'code' => $code,
+                'expires_at' => Carbon::now()->addMinutes(5)
+            ]
+        );
 
-        // Enviar correo
-        Mail::to($request->email)->send(new SendOtpMail($code));
+        // SOLUCIÓN 2: Try-Catch para capturar el error de Gmail
+        try {
+            Mail::to($request->email)->send(new SendOtpMail($code));
+        } catch (\Exception $e) {
+            // Si falla, guardamos el error en el log y avisamos al usuario
+            Log::error("Error enviando correo: " . $e->getMessage());
+            return back()->withErrors(['email' => 'Error de conexión con Gmail: ' . $e->getMessage()]);
+        }
 
         return redirect()
-            ->route('verify.code.form', ['email' => $request->email])
+            ->route('password.verify', ['email' => $request->email]) // OJO: Corregí el nombre de la ruta aquí
             ->with('status', 'Te enviamos un código a tu correo.');
     }
 
@@ -72,5 +84,28 @@ class PasswordCodeController extends Controller
         }
 
         return redirect()->route('password.reset.form', ['email' => $request->email]);
+    }
+    
+    // FALTABAN ESTAS DOS FUNCIONES PARA CAMBIAR LA CONTRASEÑA FINALMENTE
+    
+    public function resetView(Request $request) {
+        return view('auth.reset-password', ['email' => $request->email]);
+    }
+
+    public function update(Request $request) {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        $user->forceFill([
+            'password' => bcrypt($request->password) // Encriptamos la contraseña
+        ])->save();
+
+        // Borramos el código usado
+        PasswordOtp::where('email', $request->email)->delete();
+
+        return redirect()->route('login')->with('status', '¡Contraseña restablecida con éxito!');
     }
 }
